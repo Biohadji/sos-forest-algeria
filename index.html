@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#e74c3c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="SOS FOREST ALGERIA - تطبيق مراقبة الحرائق في الجزائر">
+  <title>SOS FOREST ALGERIA</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23e74c3c' width='192' height='192' rx='32'/><text x='96' y='130' font-size='100' text-anchor='middle' fill='white'>🔥</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23e74c3c' width='192' height='192' rx='32'/><text x='96' y='130' font-size='100' text-anchor='middle' fill='white'>🔥</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="particles"></div>
+
+  <div class="login-container" id="loginPage">
+    <div class="login-card">
+
+      <div class="sos-logo">
+        <div class="sos-icon">🔥</div>
+        <h1 class="sos-title">SOS FOREST ALGERIA</h1>
+        <p class="sos-subtitle">نظام مراقبة ومنع حرائق الغابات في الجزائر</p>
+      </div>
+
+      <!-- نموذج تسجيل الدخول -->
+      <form id="loginForm">
+        <div class="form-group">
+          <label>البريد الإلكتروني <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input type="email" id="loginEmail" class="form-input" placeholder="example@email.com" required>
+            <span class="input-icon">📧</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>كلمة المرور <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required minlength="6">
+            <span class="input-icon">🔒</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <span>🔐</span>
+          <span>دخول التطبيق</span>
+        </button>
+
+        <div style="text-align:center; margin-top:20px;">
+          <span style="color:var(--text-muted); font-size:14px;">ليس لديك حساب؟</span>
+          <button type="button" onclick="showRegister()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:700; cursor:pointer; font-family:Cairo; text-decoration:underline;">سجل الآن</button>
+        </div>
+      </form>
+
+      <!-- نموذج التسجيل -->
+      <form id="registerForm" style="display:none;">
+        <div class="form-group">
+          <label>البريد الإلكتروني <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input type="email" id="regEmail" class="form-input" placeholder="example@email.com" required>
+            <span class="input-icon">📧</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>كلمة المرور <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input type="password" id="regPassword" class="form-input" placeholder="6 أحرف على الأقل" required minlength="6">
+            <span class="input-icon">🔒</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>تأكيد كلمة المرور <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input type="password" id="regPasswordConfirm" class="form-input" placeholder="أعد إدخال كلمة المرور" required minlength="6">
+            <span class="input-icon">🔒</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+          <span>📝</span>
+          <span>إنشاء حساب جديد</span>
+        </button>
+
+        <div style="text-align:center; margin-top:20px;">
+          <span style="color:var(--text-muted); font-size:14px;">لديك حساب بالفعل؟</span>
+          <button type="button" onclick="showLogin()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:700; cursor:pointer; font-family:Cairo; text-decoration:underline;">سجّل الدخول</button>
+        </div>
+      </form>
+
+      <!-- شاشة تأكيد البريد -->
+      <div id="confirmScreen" style="display:none; text-align:center; padding:20px 0;">
+        <div style="font-size:64px; margin-bottom:16px;">📧</div>
+        <h3 style="font-size:20px; font-weight:800; margin-bottom:12px;">تأكيد البريد الإلكتروني</h3>
+        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:8px;">تم إرسال رابط التأكيد إلى</p>
+        <p id="confirmEmailDisplay" style="color:var(--primary); font-size:16px; font-weight:700; margin-bottom:20px;"></p>
+        <button onclick="showLogin()" class="btn btn-outline" style="width:100%;">
+          <span>←</span>
+          <span>العودة لتسجيل الدخول</span>
+        </button>
+      </div>
+
+      <!-- شاشة نجاح التسجيل -->
+      <div id="successScreen" style="display:none; text-align:center; padding:20px 0;">
+        <div style="font-size:64px; margin-bottom:16px;">🎉</div>
+        <h3 style="font-size:20px; font-weight:800; margin-bottom:12px; color:var(--success);">تم التسجيل بنجاح!</h3>
+        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:20px;">يمكنك الآن تسجيل الدخول بحسابك</p>
+        <button onclick="showLogin()" class="btn btn-primary" style="width:100%;">
+          <span>🔐</span>
+          <span>تسجيل الدخول</span>
+        </button>
+      </div>
+
+      <div class="login-footer">
+        <p>© 2026 SOS FOREST ALGERIA - جميع الحقوق محفوظة</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard" id="dashboard">
+    <div class="topbar">
+      <div class="topbar-right">
+        <div class="topbar-brand">
+          <div class="topbar-brand-icon">🔥</div>
+          <div class="topbar-brand-text">SOS <span>FOREST</span> ALGERIA</div>
+        </div>
+      </div>
+      <div class="topbar-left">
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div>
+            <div class="user-name" id="userName">المستخدم</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="predictions">
+        <span class="tab-icon">🌤️</span>
+        <span>التوقعات والتنبؤات</span>
+      </button>
+      <button class="nav-tab" data-section="reports">
+        <span class="tab-icon">🚨</span>
+        <span>التبليغات عن الحرائق</span>
+        <span class="tab-badge" id="reportCount">0</span>
+      </button>
+      <button class="nav-tab" data-section="shelters">
+        <span class="tab-icon">🏕️</span>
+        <span>الإيواء والمؤونة</span>
+      </button>
+      <button class="nav-tab" data-section="admin">
+        <span class="tab-icon">⚙️</span>
+        <span>لوحة التحكم</span>
+      </button>
+    </div>
+
+    <div class="main-content">
+
+      <div class="section active" id="section-predictions">
+        <div class="section-header">
+          <h2 class="section-title"><span class="icon">🌤️</span> التوقعات والتنبؤات</h2>
+          <p class="section-desc">مراقبة الأحوال الجوية والتنبؤ بمخاطر حرائق الغابات بالاعتماد على بيانات NASA</p>
+        </div>
+
+        <div class="weather-grid">
+          <div class="weather-card">
+            <div class="weather-icon">🌡️</div>
+            <div class="weather-value" id="currentTemp">--°C</div>
+            <div class="weather-label">درجة الحرارة</div>
+          </div>
+          <div class="weather-card">
+            <div class="weather-icon">💧</div>
+            <div class="weather-value" id="currentHumidity">--%</div>
+            <div class="weather-label">الرطوبة</div>
+          </div>
+          <div class="weather-card">
+            <div class="weather-icon">💨</div>
+            <div class="weather-value" id="currentWind">-- km/h</div>
+            <div class="weather-label">سرعة الرياح</div>
+          </div>
+          <div class="weather-card">
+            <div class="weather-icon">🌧️</div>
+            <div class="weather-value" id="currentRain">-- mm</div>
+            <div class="weather-label">التساقطات</div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card red">
+            <div class="stat-icon red">🔥</div>
+            <div class="stat-value" id="riskPercent">--%</div>
+            <div class="stat-label">نسبة خطر الحريق</div>
+            <div id="riskBadge" class="risk-badge low">غير محدد</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon red">🔴</div>
+            <div class="stat-value" id="statCritical">0</div>
+            <div class="stat-label">مناطق حرجة</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon orange">🟠</div>
+            <div class="stat-value" id="statHigh">0</div>
+            <div class="stat-label">مناطق مرتفعة</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon blue">🟢</div>
+            <div class="stat-value" id="statLow">0</div>
+            <div class="stat-label">مناطق آمنة</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <h3 class="card-title">🗺️ خريطة التوقعات</h3>
+          </div>
+          <div class="card-body">
+            <div class="map-container" id="predictionsMap"></div>
+            <div class="heatmap-legend">
+              <span class="legend-title">مستوى الخطر:</span>
+              <div style="flex:1;">
+                <div class="legend-scale"></div>
+                <div class="legend-labels">
+                  <span>آمن</span>
+                  <span>منخفض</span>
+                  <span>متوسط</span>
+                  <span>مرتفع</span>
+                  <span>حرج</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <h3 class="card-title">📊 نقاط الخطر على الخريطة</h3>
+          </div>
+          <div class="card-body">
+            <div class="alerts-list" id="heatmapPoints">
+              <div style="text-align:center; padding:40px; color:var(--text-muted);">
+                <div class="spinner"></div>
+                <p style="margin-top:12px;">جاري تحليل بيانات الأحوال الجوية من NASA...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">📋 جدول المواقع القابلة للاشتعال</h3>
+          </div>
+          <div class="card-body">
+            <div id="dangerTableContainer">
+              <div style="text-align:center; padding:40px; color:var(--text-muted);">
+                <div class="spinner"></div>
+                <p style="margin-top:12px;">جاري تحميل بيانات المواقع...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="section-reports">
+        <div class="section-header">
+          <h2 class="section-title"><span class="icon">🚨</span> التبليغات عن الحرائق</h2>
+          <p class="section-desc">إرسال تبليغات فورية عن حرائق الغابات إلى المصالح المعنية</p>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <h3 class="card-title">📝 نموذج التبليغ</h3>
+          </div>
+          <div class="card-body">
+            <form id="reportForm" class="report-form">
+              <div class="form-group">
+                <label>رقم الهاتف <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="tel" id="reportPhone" class="form-input" placeholder="05XX XXX XXX" pattern="0[5-7]\d{8}" required>
+                  <span class="input-icon">📱</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>الولاية <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <select id="reportWilaya" class="form-select wilaya-select" required>
+                    <option value="">-- اختر الولاية --</option>
+                  </select>
+                  <span class="input-icon">📍</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>البلدية <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="text" id="reportMunicipality" class="form-input" placeholder="اسم البلدية" required>
+                  <span class="input-icon">🏘️</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>اسم الحي</label>
+                <div class="input-wrapper">
+                  <input type="text" id="reportNeighborhood" class="form-input" placeholder="اسم الحي (اختياري)">
+                  <span class="input-icon">🏠</span>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label>موقع الحريق <span class="required">*</span></label>
+                <button type="button" id="gpsBtn" class="gps-btn">
+                  <span>📍</span>
+                  <span>تحديد موقعي GPS</span>
+                </button>
+                <div class="gps-coords" id="gpsCoords"></div>
+                <input type="hidden" id="reportLat" value="">
+                <input type="hidden" id="reportLng" value="">
+              </div>
+
+              <div class="form-group full-width">
+                <label>صورة الموقع</label>
+                <div class="image-upload">
+                  <input type="file" id="reportImage" accept="image/*" capture="environment">
+                  <div class="upload-icon">📷</div>
+                  <div class="upload-text" id="uploadText">اضغط لتحميل صورة الموقع</div>
+                  <div class="upload-hint">يمكنك التقاط صورة بالكاميرا أو اختيار من المعرض</div>
+                </div>
+                <img id="imagePreview" class="image-preview" alt="معاينة الصورة">
+              </div>
+
+              <div class="form-group">
+                <label>التاريخ <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="date" id="reportDate" class="form-input" required>
+                  <span class="input-icon">📅</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>الساعة <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="time" id="reportTime" class="form-input" required>
+                  <span class="input-icon">⏰</span>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <button type="submit" class="btn btn-primary">
+                  <span>📤</span>
+                  <span>إرسال التبليغ</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">🔔 آخر التبليغات</h3>
+          </div>
+          <div class="card-body">
+            <div class="alerts-list" id="alertsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="section-shelters">
+        <div class="section-header">
+          <h2 class="section-title"><span class="icon">🏕️</span> الإيواء والمؤونة</h2>
+          <p class="section-desc">تحديد أماكن الإيواء والمؤونة لمساعدة العائلات المنكوبة</p>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <h3 class="card-title">📝 تسجيل مركز الإيواء</h3>
+          </div>
+          <div class="card-body">
+            <form id="shelterForm" class="report-form">
+              <div class="form-group">
+                <label>اسم المركز <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="text" id="shelterName" class="form-input" placeholder="اسم مركز الإيواء" required>
+                  <span class="input-icon">🏢</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>الولاية <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <select id="shelterWilaya" class="form-select wilaya-select" required>
+                    <option value="">-- اختر الولاية --</option>
+                  </select>
+                  <span class="input-icon">📍</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>البلدية <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="text" id="shelterMunicipality" class="form-input" placeholder="اسم البلدية" required>
+                  <span class="input-icon">🏘️</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>رقم هاتف المركز <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="tel" id="shelterPhone" class="form-input" placeholder="0XX XX XX XX" required>
+                  <span class="input-icon">📞</span>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label>موقع المركز <span class="required">*</span></label>
+                <button type="button" id="shelterGpsBtn" class="gps-btn">
+                  <span>📍</span>
+                  <span>تحديد موقعي GPS</span>
+                </button>
+                <div class="gps-coords" id="shelterGpsCoords"></div>
+                <input type="hidden" id="shelterLat" value="">
+                <input type="hidden" id="shelterLng" value="">
+              </div>
+
+              <div class="form-group full-width">
+                <label>صورة المركز</label>
+                <div class="image-upload">
+                  <input type="file" id="shelterImage" accept="image/*" capture="environment">
+                  <div class="upload-icon">📷</div>
+                  <div class="upload-text" id="shelterUploadText">اضغط لتحميل صورة المركز</div>
+                  <div class="upload-hint">يمكنك التقاط صورة بالكاميرا أو اختيار من المعرض</div>
+                </div>
+                <img id="shelterImagePreview" class="image-preview" alt="معاينة الصورة">
+              </div>
+
+              <div class="form-group full-width">
+                <button type="submit" class="btn btn-success">
+                  <span>📤</span>
+                  <span>تسجيل المركز</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="section-admin">
+        <div class="section-header">
+          <h2 class="section-title"><span class="icon">⚙️</span> لوحة التحكم</h2>
+          <p class="section-desc">مراقبة وإدارة جميع التبليغات ومراكز الإيواء</p>
+        </div>
+
+        <div class="stats-grid" style="margin-bottom:24px;">
+          <div class="stat-card red">
+            <div class="stat-icon red">📊</div>
+            <div class="stat-value" id="adminTotalReports">0</div>
+            <div class="stat-label">إجمالي التبليغات</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon orange">⏳</div>
+            <div class="stat-value" id="adminActiveReports">0</div>
+            <div class="stat-label">تبليغات قيد المتابعة</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon green">✅</div>
+            <div class="stat-value" id="adminResolvedReports">0</div>
+            <div class="stat-label">تبليغات تم حلها</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon blue">🏕️</div>
+            <div class="stat-value" id="adminTotalShelters">0</div>
+            <div class="stat-label">مراكز الإيواء</div>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="card admin-full">
+            <div class="card-header">
+              <h3 class="card-title">🗺️ خريطة التبليغات والمراكز</h3>
+            </div>
+            <div class="card-body">
+              <div class="map-container" id="adminMap"></div>
+              <div class="heatmap-legend" style="margin-top:16px;">
+                <span class="legend-title">المفتاح:</span>
+                <div style="display:flex; gap:20px; align-items:center;">
+                  <span style="display:flex; align-items:center; gap:6px; font-size:13px;">
+                    <span style="width:12px;height:12px;background:#e74c3c;border-radius:50%;display:inline-block;"></span>
+                    مواقع الحرائق
+                  </span>
+                  <span style="display:flex; align-items:center; gap:6px; font-size:13px;">
+                    <span style="width:12px;height:12px;background:#27ae60;border-radius:50%;display:inline-block;"></span>
+                    مراكز الإيواء
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">🔔 التبليغات الحديثة</h3>
+            </div>
+            <div class="card-body">
+              <div class="alerts-list" id="adminAlertsList"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">📈 إحصائيات الأداء</h3>
+            </div>
+            <div class="card-body">
+              <div style="display:flex; flex-direction:column; gap:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
+                  <span style="font-size:14px; color:var(--text-secondary);">متوسط وقت الاستجابة</span>
+                  <span style="font-size:16px; font-weight:700; color:var(--info);">15 دقيقة</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
+                  <span style="font-size:14px; color:var(--text-secondary);">نسبة التبليغات المؤكدة</span>
+                  <span style="font-size:16px; font-weight:700; color:var(--success);">78%</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
+                  <span style="font-size:14px; color:var(--text-secondary);">الولايات الأكثر تأثراً</span>
+                  <span style="font-size:16px; font-weight:700; color:var(--warning);">7 ولايات</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
+                  <span style="font-size:14px; color:var(--text-secondary);">عدد مراكز الإيواء النشطة</span>
+                  <span style="font-size:16px; font-weight:700; color:var(--primary);">12 مركز</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="pointModal" class="modal-overlay">
+    <div class="modal" style="max-width:420px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="pointModalTitle">معلومات النقطة</h3>
+        <button class="modal-close" onclick="closePointModal()">✕</button>
+      </div>
+      <div class="modal-body" id="pointModalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-info btn-sm" id="pointItineraryBtn" target="_blank">
+          <span>🗺️</span> فتح المسار Itinéraire
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="closePointModal()">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/wilayas.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/nasa-api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    }
+    populateWilayaDropdowns();
+    var rd = document.getElementById('reportDate');
+    var rt = document.getElementById('reportTime');
+    if (rd) rd.valueAsDate = new Date();
+    if (rt) rt.valueAsDate = new Date();
+  </script>
+</body>
+</html>
