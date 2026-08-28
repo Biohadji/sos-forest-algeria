@@ -167,7 +167,12 @@
       <div class="section active" id="section-predictions">
         <div class="section-header">
           <h2 class="section-title"><span class="icon">🌤️</span> التوقعات والتنبؤات</h2>
-          <p class="section-desc">مراقبة الأحوال الجوية والتنبؤ بمخاطر حرائق الغابات بالاعتماد على بيانات NASA</p>
+          <p class="section-desc">مراقبة الأحوال الجوية والتنبؤ بمخاطر حرائق الغابات — <b style="color:#e74c3c;">المرجع الرسمي: خرائط NASA Worldview — الجزائر فقط (Algeria Only)</b> <span style="font-size:11px; color:var(--text-muted);">BBOX: -8.68,18.97,11.99,37.34 | VIIRS + EONET 9 فئات | 🇩🇿 DZ</span></p>
+          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <span style="font-size:11px; color:var(--text-muted); background:rgba(16,185,129,0.08); padding:6px 10px; border-radius:8px; border:1px solid rgba(16,185,129,0.25);">🇩🇿 Algeria Only</span>
+            <span style="font-size:11px; color:var(--text-muted); background:rgba(231,76,60,0.08); padding:6px 10px; border-radius:8px; border:1px solid rgba(231,76,60,0.15);">🛰️ المرجع: worldview.earthdata.nasa.gov</span>
+            <span id="worldviewLastUpdate" style="font-size:11px; color:var(--text-muted);">آخر تحيين: --</span>
+          </div>
         </div>
 
         <div class="weather-grid">
@@ -217,9 +222,41 @@
           </div>
         </div>
 
+        <div class="stats-grid" style="margin-bottom:24px;">
+          <div class="stat-card red">
+            <div class="stat-icon red">🛰️</div>
+            <div class="stat-value" id="firmsCount">0</div>
+            <div class="stat-label">نقاط FIRMS المكتشفة</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon red">🔥</div>
+            <div class="stat-value" id="firmsHigh">0</div>
+            <div class="stat-label">حرائق عالية السطوع</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon orange">🔶</div>
+            <div class="stat-value" id="firmsMedium">0</div>
+            <div class="stat-label">حرائق متوسطة</div>
+          </div>
+          <div class="stat-card yellow">
+            <div class="stat-icon yellow">🟡</div>
+            <div class="stat-value" id="firmsLow">0</div>
+            <div class="stat-label">حرائق منخفضة</div>
+          </div>
+        </div>
+
         <div class="card" style="margin-bottom:24px;">
-          <div class="card-header">
-            <h3 class="card-title">🗺️ خريطة التوقعات</h3>
+          <div class="card-header" style="flex-wrap:wrap; gap:8px;">
+            <h3 class="card-title">🗺️ خريطة التوقعات <span style="font-size:11px; font-weight:600; color:#059669; background:rgba(16,185,129,0.1); padding:3px 8px; border-radius:20px; border:1px solid rgba(16,185,129,0.2);">🇩🇿 Algeria Only</span> <span style="font-size:11px; font-weight:600; color:#e74c3c; background:rgba(231,76,60,0.1); padding:3px 8px; border-radius:20px; border:1px solid rgba(231,76,60,0.2);">مرجع Worldview</span></h3>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <span id="worldviewLastUpdate" style="font-size:10px; color:var(--text-muted);">آخر تحيين: --</span>
+              <button id="worldviewRefreshBtn" onclick="refreshPredictionsFromWorldview()" class="btn btn-sm btn-primary" style="font-size:12px; font-weight:700; background:#059669; border-color:#059669; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+                <span>🔄</span> تحيين البيانات من NASA Worldview
+              </button>
+              <a id="worldviewOpenBtn" href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=dustHaze,manmade,seaLakeIce,severeStorms,snow,volcanoes,waterColor,floods,wildfires&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),VIIRS_NOAA20_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true&t=2026-08-28-T15%3A25%3A32Z" target="_blank" class="btn btn-sm btn-outline" style="font-size:12px;">
+                <span>🌍</span> فتح Worldview (Algeria)
+              </a>
+            </div>
           </div>
           <div class="card-body">
             <div class="map-container" id="predictionsMap"></div>
@@ -241,7 +278,41 @@
 
         <div class="card" style="margin-bottom:24px;">
           <div class="card-header">
+            <h3 class="card-title">🛰️ بيانات الأقمار الصناعية - NASA Worldview <span style="font-size:11px; color:#059669; background:rgba(16,185,129,0.1); padding:3px 8px; border-radius:20px; border:1px solid rgba(16,185,129,0.2);">🇩🇿 Algeria Only</span></h3>
+            <span style="font-size:11px; color:var(--text-muted);">BBOX: -8.68,18.97,11.99,37.34 | 2026-04-30 → 2026-08-28 | الجزائر فقط</span>
+          </div>
+          <div class="card-body">
+            <iframe id="nasaWorldview" src="https://worldview.earthdata.nasa.gov/embed?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=dustHaze,manmade,seaLakeIce,severeStorms,snow,volcanoes,waterColor,floods,wildfires&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),VIIRS_NOAA20_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true&t=2026-08-28-T15%3A25%3A32Z" width="100%" height="450" style="border:none; border-radius:12px; background:#000;" allowfullscreen loading="lazy"></iframe>
+            <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=dustHaze,manmade,seaLakeIce,severeStorms,snow,volcanoes,waterColor,floods,wildfires&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),VIIRS_NOAA20_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true&t=2026-08-28-T15%3A25%3A32Z" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
+                🔥 FIRMS حرائق الجزائر + 9 فئات
+              </a>
+              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=severeStorms&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
+                🌪️ عواصف الجزائر
+              </a>
+              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=floods&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
+                🌊 فيضانات الجزائر
+              </a>
+              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=dustHaze&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
+                🌫️ غبار الجزائر
+              </a>
+              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=snow,seaLakeIce&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
+                ❄️ ثلوج الجزائر
+              </a>
+              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=volcanoes&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
+                🌋 براكين
+              </a>
+            </div>
+            <div id="eonetEventsList" style="margin-top:16px;"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
             <h3 class="card-title">📊 نقاط الخطر على الخريطة</h3>
+            <button onclick="transferWorldviewPointsToDangerData()" class="btn btn-sm btn-primary" style="font-size:11px;">
+              🛰️ نقل من Worldview
+            </button>
           </div>
           <div class="card-body">
             <div class="alerts-list" id="heatmapPoints">
