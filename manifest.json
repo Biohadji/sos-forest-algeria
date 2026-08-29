@@ -31,19 +31,19 @@
     {
       "name": "خريطة الحرائق",
       "short_name": "الخرائط",
-      "url": "/index.html#map",
+      "url": "/index.html",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "التبليغ عن حريق",
       "short_name": "تبليغ",
-      "url": "/index.html#report",
+      "url": "/index.html",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "المساعد الذكي",
       "short_name": "مساعد",
-      "url": "/index.html#ai",
+      "url": "/index.html",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ],

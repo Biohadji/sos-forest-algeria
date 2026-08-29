@@ -169,7 +169,7 @@ function isExternalAPI(hostname) {
 
 // Push notifications
 self.addEventListener('push', (event) => {
-  let data = { title: 'SOS FOREST ALGERIA', body: 'تنبيه جديد关于 الحرائق' };
+  let data = { title: 'SOS FOREST ALGERIA', body: 'تنبيه جديد عن الحرائق' };
   if (event.data) {
     try { data = event.data.json(); } catch (e) { data.body = event.data.text(); }
   }

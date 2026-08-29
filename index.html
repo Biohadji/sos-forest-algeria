@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#e74c3c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,6 +22,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
   <link rel="apple-touch-icon-precomposed" href="icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
@@ -62,7 +63,7 @@
 
         <div style="text-align:center; margin-top:20px;">
           <span style="color:var(--text-muted); font-size:14px;">ليس لديك حساب؟</span>
-          <button type="button" onclick="showRegister()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:700; cursor:pointer; font-family:Cairo; text-decoration:underline;">سجل الآن</button>
+          <button type="button" onclick="showRegister()" style="background:none; border:none; color:var(--color-primary); font-size:14px; font-weight:700; cursor:pointer; font-family:Cairo; text-decoration:underline;">سجل الآن</button>
         </div>
       </form>
 
@@ -117,7 +118,7 @@
 
         <div style="text-align:center; margin-top:20px;">
           <span style="color:var(--text-muted); font-size:14px;">لديك حساب بالفعل؟</span>
-          <button type="button" onclick="showLogin()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:700; cursor:pointer; font-family:Cairo; text-decoration:underline;">سجّل الدخول</button>
+          <button type="button" onclick="showLogin()" style="background:none; border:none; color:var(--color-primary); font-size:14px; font-weight:700; cursor:pointer; font-family:Cairo; text-decoration:underline;">سجّل الدخول</button>
         </div>
       </form>
 
@@ -126,7 +127,7 @@
         <div style="font-size:64px; margin-bottom:16px;">📧</div>
         <h3 style="font-size:20px; font-weight:800; margin-bottom:12px;">تأكيد البريد الإلكتروني</h3>
         <p style="color:var(--text-secondary); font-size:14px; margin-bottom:8px;">تم إرسال رابط التأكيد إلى</p>
-        <p id="confirmEmailDisplay" style="color:var(--primary); font-size:16px; font-weight:700; margin-bottom:20px;"></p>
+        <p id="confirmEmailDisplay" style="color:var(--color-primary); font-size:16px; font-weight:700; margin-bottom:20px;"></p>
         <button onclick="showLogin()" class="btn btn-outline" style="width:100%;">
           <span>←</span>
           <span>العودة لتسجيل الدخول</span>
@@ -136,7 +137,7 @@
       <!-- شاشة نجاح التسجيل -->
       <div id="successScreen" style="display:none; text-align:center; padding:20px 0;">
         <div style="font-size:64px; margin-bottom:16px;">🎉</div>
-        <h3 style="font-size:20px; font-weight:800; margin-bottom:12px; color:var(--success);">تم التسجيل بنجاح!</h3>
+        <h3 style="font-size:20px; font-weight:800; margin-bottom:12px; color:var(--color-success);">تم التسجيل بنجاح!</h3>
         <p style="color:var(--text-secondary); font-size:14px; margin-bottom:20px;">يمكنك الآن تسجيل الدخول بحسابك</p>
         <button onclick="showLogin()" class="btn btn-primary" style="width:100%;">
           <span>🔐</span>
@@ -423,7 +424,7 @@
                   <div class="upload-text" id="uploadText">اضغط لتحميل صورة الموقع</div>
                   <div class="upload-hint">يمكنك التقاط صورة بالكاميرا أو اختيار من المعرض</div>
                 </div>
-                <img id="imagePreview" class="image-preview" alt="معاينة الصورة">
+                <img id="reportImagePreview" class="image-preview" alt="معاينة الصورة" style="display:none">
               </div>
 
               <div class="form-group">
@@ -527,7 +528,7 @@
                   <div class="upload-text" id="shelterUploadText">اضغط لتحميل صورة المركز</div>
                   <div class="upload-hint">يمكنك التقاط صورة بالكاميرا أو اختيار من المعرض</div>
                 </div>
-                <img id="shelterImagePreview" class="image-preview" alt="معاينة الصورة">
+                <img id="shelterImagePreview" class="image-preview" alt="معاينة الصورة" style="display:none">
               </div>
 
               <div class="form-group full-width">
@@ -644,7 +645,7 @@
                   <div class="upload-text" id="solidarityUploadText">اضغط لتحميل صورة الحملة</div>
                   <div class="upload-hint">يمكنك التقاط صورة بالكاميرا أو اختيار من المعرض</div>
                 </div>
-                <img id="solidarityImagePreview" class="image-preview" alt="معاينة الصورة">
+                <img id="solidarityImagePreview" class="image-preview" alt="معاينة الصورة" style="display:none">
               </div>
 
               <div class="form-group full-width">
@@ -680,7 +681,7 @@
         </div>
 
         <div class="card" style="margin-bottom:0;height:calc(100vh - 220px);min-height:500px;display:flex;flex-direction:column;">
-          <div class="card-header" style="border-bottom:1px solid var(--border-color);flex-shrink:0;">
+          <div class="card-header" style="border-bottom:1px solid var(--border-glass);flex-shrink:0;">
             <div style="display:flex;align-items:center;gap:10px;">
               <div style="width:40px;height:40px;background:linear-gradient(135deg,#00c853,#1a2a3a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid #00c853;">🤖</div>
               <div>
@@ -709,7 +710,7 @@
             </div>
           </div>
 
-          <div style="padding:12px 16px;border-top:1px solid var(--border-color);flex-shrink:0;">
+          <div style="padding:12px 16px;border-top:1px solid var(--border-glass);flex-shrink:0;">
             <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
               <button onclick="aiQuickQuestion('ما هي أرقام الطوارئ في الجزائر؟')" style="padding:6px 12px;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.2);border-radius:20px;font-size:11px;color:#e74c3c;cursor:pointer;font-family:Cairo;">📞 أرقام الطوارئ</button>
               <button onclick="aiQuickQuestion('كيف أبلّغ عن حريق؟')" style="padding:6px 12px;background:rgba(255,152,0,0.1);border:1px solid rgba(255,152,0,0.2);border-radius:20px;font-size:11px;color:#ff9800;cursor:pointer;font-family:Cairo;">🔥 التبليغ عن حريق</button>
@@ -817,7 +818,7 @@
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
                   <span style="font-size:14px; color:var(--text-secondary);">نسبة التبليغات المؤكدة</span>
-                  <span style="font-size:16px; font-weight:700; color:var(--success);">78%</span>
+                  <span style="font-size:16px; font-weight:700; color:var(--color-success);">78%</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
                   <span style="font-size:14px; color:var(--text-secondary);">الولايات الأكثر تأثراً</span>
@@ -825,7 +826,7 @@
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
                   <span style="font-size:14px; color:var(--text-secondary);">عدد مراكز الإيواء النشطة</span>
-                  <span style="font-size:16px; font-weight:700; color:var(--primary);">12 مركز</span>
+                  <span style="font-size:16px; font-weight:700; color:var(--color-primary);">12 مركز</span>
                 </div>
               </div>
             </div>
@@ -906,7 +907,10 @@
     var rd = document.getElementById('reportDate');
     var rt = document.getElementById('reportTime');
     if (rd) rd.valueAsDate = new Date();
-    if (rt) rt.valueAsDate = new Date();
+    if (rt) {
+        var now = new Date();
+        rt.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    }
   </script>
 </body>
 </html>

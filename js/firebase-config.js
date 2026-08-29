@@ -92,7 +92,7 @@ async function getFromFirestore(collection, docId) {
     const key = `forest_${collection}_${docId}`;
     const data = localStorage.getItem(key);
     if (data) {
-      return { success: true, data: JSON.parse(key), fallback: true };
+      return { success: true, data: JSON.parse(data), fallback: true };
     }
     return { success: true, data: null, fallback: true };
   } catch (error) {
@@ -209,18 +209,3 @@ async function getImage(path) {
 function isFirebaseAvailable() {
   return firebaseAvailable;
 }
-
-export {
-  FIREBASE_CONFIG,
-  FIREBASE_COLLECTIONS,
-  initFirebase,
-  getFirestore,
-  getStorage,
-  saveToFirestore,
-  getFromFirestore,
-  getAllFromFirestore,
-  deleteFromFirestore,
-  uploadImage,
-  getImage,
-  isFirebaseAvailable
-};

@@ -1611,13 +1611,11 @@ body {
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: var(--blur-sm);
   -webkit-backdrop-filter: var(--blur-sm);
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 2000;
   padding: var(--spacing-md);
-  animation: modalOverlayFadeIn 0.3s ease;
-  opacity: 0;
 }
 
 .modal-overlay.visible {
@@ -3825,4 +3823,331 @@ textarea:focus-visible {
 .map-legend-panel .legend-text {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
+}
+
+/* ============================================================
+   DYNAMIC CONTENT STYLES (fire map points, alerts, solidarity, admin)
+   ============================================================ */
+
+/* Fire map point cards */
+.heatmap-point {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  backdrop-filter: var(--blur-sm);
+}
+.point-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+.point-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+.status-active, .status-high {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+.status-medium {
+  background: rgba(243, 156, 18, 0.2);
+  color: #f39c12;
+}
+.status-low {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+.status-out {
+  background: rgba(127, 140, 141, 0.2);
+  color: #7f8c8d;
+}
+.point-frp {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+.point-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-sm) 0;
+}
+.point-detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+.point-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+/* Alert cards */
+.alert-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+.alert-status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+.alert-body {
+  margin: var(--spacing-sm) 0;
+}
+.alert-detail {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 4px 0;
+}
+.alert-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+/* Buttons for dynamic content */
+.btn-gps, .btn-resolve, .contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn-gps {
+  background: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+}
+.btn-gps:hover {
+  background: rgba(52, 152, 219, 0.3);
+}
+.btn-resolve {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+.btn-resolve:hover {
+  background: rgba(46, 204, 113, 0.3);
+}
+.contact-btn {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  text-decoration: none;
+}
+.contact-btn:hover {
+  background: rgba(231, 76, 60, 0.3);
+}
+.report-image {
+  width: 100%;
+  max-width: 300px;
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-sm);
+}
+
+/* Solidarity post cards */
+.solidarity-post {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+.solidarity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-sm);
+}
+.solidarity-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+.solidarity-time {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+.solidarity-org {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+.solidarity-body {
+  margin: var(--spacing-sm) 0;
+}
+.solidarity-desc {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.solidarity-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-sm) 0;
+}
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+.solidarity-image {
+  width: 100%;
+  max-width: 400px;
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-sm);
+}
+.solidarity-contact {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+.solidarity-poster {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border-glass);
+}
+.poster-info {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+/* Admin panel cards */
+.admin-alert-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+.admin-solidarity-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+.org-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.post-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+.post-details {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: var(--spacing-sm) 0;
+}
+.card-contact {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+/* Image preview */
+.image-preview {
+  width: 100%;
+  max-width: 300px;
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-sm);
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+}
+.loading-spinner::after {
+  content: '';
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--border-glass);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-muted);
+}
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.5;
+}
+
+/* Fix heatmap legend positioning */
+.heatmap-legend {
+  position: relative;
+}
+
+/* Accessibility: focus visible */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Safe area for notched phones */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
 }

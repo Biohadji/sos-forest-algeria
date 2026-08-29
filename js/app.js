@@ -546,11 +546,11 @@ function switchSection(section) {
             tab.classList.add('active');
         }
     });
-    var sections = document.querySelectorAll('.content-section');
+    var sections = document.querySelectorAll('.section');
     sections.forEach(function (s) {
         s.style.display = 'none';
     });
-    var target = document.getElementById(section + 'Section');
+    var target = document.getElementById('section-' + section);
     if (target) {
         target.style.display = 'block';
     }
@@ -570,6 +570,8 @@ function switchSection(section) {
             break;
         case 'admin':
             initAdminPanel();
+            break;
+        case 'ai-assistant':
             break;
     }
 }
@@ -1106,7 +1108,10 @@ function handleReportSubmit(e) {
     var rd = document.getElementById('reportDate');
     var rt = document.getElementById('reportTime');
     if (rd) rd.valueAsDate = new Date();
-    if (rt) rt.valueAsDate = new Date();
+    if (rt) {
+        var now = new Date();
+        rt.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    }
 
     showToast('تم إرسال البلاغ بنجاح! شكراً لك على مساعدتنا', 'success');
     loadAlerts();
@@ -1180,9 +1185,13 @@ function loadAlerts() {
         html += '</div>';
     });
     container.innerHTML = html;
+    // Update report count badge
+    var badge = document.getElementById('reportCount');
+    if (badge) {
+        var activeReports = reports.filter(function (r) { return r.status === 'active'; });
+        badge.textContent = activeReports.length;
+    }
 }
-
-function resolveReport(reportId) {
     var reports = getAllReports();
     var report = reports.find(function (r) { return r.id === reportId; });
     if (report) {
@@ -1410,10 +1419,13 @@ function publishSolidarityPost() {
     }
 
     var typeLabels = {
-        'donation': 'تبرع',
-        'volunteer': 'تطوع',
-        'shelter': 'مأوى',
-        'other': 'أخرى'
+        'donation': '💰 جمع التبرعات',
+        'relief': '📦 عمليات الإغاثة',
+        'solidarity': '🤲 حملات التضامن',
+        'medical': '🏥 مساعدة طبية',
+        'shelter': '🏕️ إيواء المتضررين',
+        'food': '🍎 توزيع الغذاء',
+        'other': '📋 أخرى'
     };
 
     var post = {
@@ -2209,14 +2221,15 @@ function applyTranslations() {
             var key = 'nav' + section.charAt(0).toUpperCase() + section.slice(1);
             var translated = t(key);
             if (translated !== key) {
-                tab.textContent = translated;
+                var textSpan = tab.querySelector('span:not(.tab-icon):not(.tab-badge)');
+                if (textSpan) textSpan.textContent = translated;
             }
         }
     });
 
-    var sectionIds = ['predictions', 'reports', 'shelters', 'solidarity', 'admin'];
+    var sectionIds = ['predictions', 'reports', 'shelters', 'solidarity', 'ai-assistant', 'admin'];
     sectionIds.forEach(function (id) {
-        var sectionEl = document.getElementById(id + 'Section');
+        var sectionEl = document.getElementById('section-' + id);
         if (!sectionEl) return;
         var titleEl = sectionEl.querySelector('.section-title');
         var descEl = sectionEl.querySelector('.section-description');
@@ -2794,8 +2807,8 @@ function populateWilayaDropdowns() {
     selects.forEach(function (select) {
         var currentValue = select.value;
         select.innerHTML = '<option value="">-- اختر الولاية --</option>';
-        if (typeof WILAYAS_UNIQUE !== 'undefined' && Array.isArray(WILAYAS_UNIQUE)) {
-            WILAYAS_UNIQUE.forEach(function (w) {
+        if (typeof wilayas !== 'undefined' && Array.isArray(wilayas)) {
+            wilayas.forEach(function (w) {
                 var option = document.createElement('option');
                 option.value = w.name;
                 option.textContent = w.code + ' - ' + w.name;
