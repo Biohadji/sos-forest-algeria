@@ -267,60 +267,42 @@
 
         <div class="stats-grid">
           <div class="stat-card red">
+            <div class="stat-icon red">🔥</div>
+            <div class="stat-value" id="firmsCount">0</div>
+            <div class="stat-label">إجمالي الحرائق النشطة</div>
+          </div>
+          <div class="stat-card red">
             <div class="stat-icon red">🔴</div>
             <div class="stat-value" id="statCritical">0</div>
-            <div class="stat-label">مناطق حرجة</div>
+            <div class="stat-label">نشاط مرتفع (High)</div>
           </div>
           <div class="stat-card orange">
             <div class="stat-icon orange">🟠</div>
             <div class="stat-value" id="statHigh">0</div>
-            <div class="stat-label">مناطق مرتفعة</div>
+            <div class="stat-label">نشاط متوسط (Medium)</div>
           </div>
           <div class="stat-card blue">
             <div class="stat-icon blue">🟢</div>
             <div class="stat-value" id="statLow">0</div>
-            <div class="stat-label">مناطق آمنة</div>
+            <div class="stat-label">نشاط منخفض (Low)</div>
           </div>
         </div>
 
         <div class="stats-grid" style="margin-bottom:24px;">
-          <div class="stat-card red">
-            <div class="stat-icon red">🔥</div>
-            <div class="stat-value" id="firmsCount">0</div>
-            <div class="stat-label">إجمالي النقاط النشطة</div>
-          </div>
-          <div class="stat-card red">
-            <div class="stat-icon red">🔴</div>
-            <div class="stat-value" id="firmsHigh">0</div>
-            <div class="stat-label">حرائق عالية (FRP > 40)</div>
-          </div>
-          <div class="stat-card orange">
-            <div class="stat-icon orange">🟠</div>
-            <div class="stat-value" id="firmsMedium">0</div>
-            <div class="stat-label">حرائق متوسطة (FRP 20-40)</div>
-          </div>
-          <div class="stat-card yellow">
-            <div class="stat-icon yellow">🟡</div>
-            <div class="stat-value" id="firmsLow">0</div>
-            <div class="stat-label">حرائق منخفضة (FRP < 20)</div>
-          </div>
-        </div>
-
-        <div class="stats-grid" style="margin-bottom:24px;">
-          <div class="stat-card" style="background:linear-gradient(135deg,rgba(0,200,83,0.1),rgba(0,200,83,0.02));border:1px solid rgba(0,200,83,0.2);">
-            <div class="stat-icon" style="color:#00c853;">📡</div>
-            <div class="stat-value" id="avgFrp">0</div>
-            <div class="stat-label">متوسط FRP (كيلوواط)</div>
-          </div>
           <div class="stat-card" style="background:linear-gradient(135deg,rgba(231,76,60,0.1),rgba(231,76,60,0.02));border:1px solid rgba(231,76,60,0.2);">
-            <div class="stat-icon" style="color:#e74c3c;">⚡</div>
+            <div class="stat-icon" style="color:#e74c3c;">📐</div>
+            <div class="stat-value" id="avgFrp">0</div>
+            <div class="stat-label">متوسط المساحة (هكتار)</div>
+          </div>
+          <div class="stat-card" style="background:linear-gradient(135deg,rgba(255,152,0,0.1),rgba(255,152,0,0.02));border:1px solid rgba(255,152,0,0.2);">
+            <div class="stat-icon" style="color:#ff9800;">📏</div>
             <div class="stat-value" id="maxFrp">0</div>
-            <div class="stat-label">أعلى FRP مسجل</div>
+            <div class="stat-label">أكبر مساحة (هكتار)</div>
           </div>
           <div class="stat-card" style="background:linear-gradient(135deg,rgba(0,150,255,0.1),rgba(0,150,255,0.02));border:1px solid rgba(0,150,255,0.2);">
             <div class="stat-icon" style="color:#0096ff;">🛰️</div>
             <div class="stat-value"><span id="satViirs">0</span> / <span id="satModis">0</span></div>
-            <div class="stat-label">VIIRS / MODIS</div>
+            <div class="stat-label">إجمالي عودات الأقمار / أقصى عودة</div>
           </div>
           <div class="stat-card" style="background:linear-gradient(135deg,rgba(156,39,176,0.1),rgba(156,39,176,0.02));border:1px solid rgba(156,39,176,0.2);">
             <div class="stat-icon" style="color:#9c27b0;">🗺️</div>

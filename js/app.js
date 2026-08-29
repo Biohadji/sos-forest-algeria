@@ -763,11 +763,7 @@ function fetchFiremapLiveData() {
         })
         .then(function (data) {
             if (data && data.features && data.features.length > 0) {
-                firemapFireData = data.features.filter(function (f) {
-                    var props = f.properties || {};
-                    var status = (props.status || '').toLowerCase().trim();
-                    return status !== 'out' && status !== 'closed' && status !== '';
-                });
+                firemapFireData = data.features;
                 console.log('Loaded ' + firemapFireData.length + ' active fire points from firemap.live');
             } else {
                 console.log('No firemap features found, using simulated data');
@@ -863,32 +859,25 @@ function updateFiremapStats() {
     var medium = 0;
     var low = 0;
     var byWilaya = {};
-    var totalFRP = 0;
-    var maxFRP = 0;
-    var satellites = { VIIRS: 0, MODIS: 0, other: 0 };
-    var dayFires = 0;
-    var nightFires = 0;
+    var totalAreaHa = 0;
+    var maxAreaHa = 0;
+    var totalSatReturns = 0;
+    var maxSatReturns = 0;
 
     firemapFireData.forEach(function (f) {
         var props = f.properties || {};
-        var frp = parseFloat(props.frp) || 0;
-        var confidence = parseFloat(props.confidence) || 0;
-        var sat = (props.satellite || '').toUpperCase();
-        var daynight = (props.daynight || '').toUpperCase();
+        var areaHa = parseFloat(props.area_ha) || 0;
+        var satReturns = parseInt(props.satellite_returns_24hrs) || 0;
+        var activity = (props.activity_rating || '').toLowerCase();
 
-        totalFRP += frp;
-        if (frp > maxFRP) maxFRP = frp;
+        totalAreaHa += areaHa;
+        if (areaHa > maxAreaHa) maxAreaHa = areaHa;
+        totalSatReturns += satReturns;
+        if (satReturns > maxSatReturns) maxSatReturns = satReturns;
 
-        if (sat === 'VIIRS') satellites.VIIRS++;
-        else if (sat === 'MODIS') satellites.MODIS++;
-        else satellites.other++;
-
-        if (daynight === 'D') dayFires++;
-        else nightFires++;
-
-        if (frp > 40 || confidence > 85) {
+        if (activity === 'high') {
             high++;
-        } else if (frp > 20 || confidence > 65) {
+        } else if (activity === 'medium') {
             medium++;
         } else {
             low++;
@@ -911,11 +900,11 @@ function updateFiremapStats() {
     setEl('statHigh', medium);
     setEl('statLow', low);
 
-    var avgFRP = total > 0 ? (totalFRP / total).toFixed(1) : 0;
-    setEl('avgFrp', avgFRP);
-    setEl('maxFrp', maxFRP.toFixed(1));
-    setEl('satViirs', satellites.VIIRS);
-    setEl('satModis', satellites.MODIS);
+    var avgArea = total > 0 ? (totalAreaHa / total).toFixed(1) : 0;
+    setEl('avgFrp', avgArea);
+    setEl('maxFrp', maxAreaHa.toFixed(1));
+    setEl('satViirs', totalSatReturns);
+    setEl('satModis', maxSatReturns);
 
     var now = new Date();
     var timeStr = now.toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
@@ -1029,9 +1018,9 @@ function renderFiremapPoints() {
         return;
     }
     var sortedData = firemapFireData.slice().sort(function (a, b) {
-        var frpA = (a.properties && a.properties.frp) || 0;
-        var frpB = (b.properties && b.properties.frp) || 0;
-        return frpB - frpA;
+        var areaA = (a.properties && parseFloat(a.properties.area_ha)) || 0;
+        var areaB = (b.properties && parseFloat(b.properties.area_ha)) || 0;
+        return areaB - areaA;
     });
     var html = '';
     sortedData.forEach(function (f, idx) {
@@ -1040,50 +1029,35 @@ function renderFiremapPoints() {
         var lng = parseFloat(coords[0]) || 0;
         var lat = parseFloat(coords[1]) || 0;
         var wilaya = getWilayaFromCoords(lat, lng);
-        var frp = parseFloat(props.frp) || 0;
-        var brightness = parseFloat(props.brightness) || 0;
-        var size = parseInt(props.area) || 0;
-        var confidence = parseInt(props.confidence) || 0;
-        var date = props.acq_date || '';
-        var time = props.acq_time || '';
-        var satellite = props.satellite || 'VIIRS';
-        var instrument = props.instrument || 'VIIRS';
-        var status = props.status || 'Active';
-        var daynight = props.daynight || 'D';
-        var daynightLabel = daynight === 'D' ? '☀️ نهار' : '🌙 ليل';
-        var statusClass = 'status-active';
-        var statusLabel = 'نشط';
-        if (status.toLowerCase() === 'out' || status.toLowerCase() === 'closed') {
-            statusClass = 'status-out';
-            statusLabel = 'منطفئ';
-        } else if (frp > 40) {
-            statusClass = 'status-high';
-            statusLabel = 'خطير';
-        } else if (frp > 20) {
-            statusClass = 'status-medium';
-            statusLabel = 'متوسط';
-        } else {
-            statusClass = 'status-low';
-            statusLabel = 'منخفض';
+        var areaHa = parseFloat(props.area_ha) || 0;
+        var areaSqM = parseFloat(props.area_sq_meters) || 0;
+        var satReturns = parseInt(props.satellite_returns_24hrs) || 0;
+        var activity = (props.activity_rating || 'Low').toLowerCase();
+        
+        var activityClass = 'status-low';
+        var activityLabel = 'منخفض';
+        if (activity === 'high') {
+            activityClass = 'status-high';
+            activityLabel = 'مرتفع';
+        } else if (activity === 'medium') {
+            activityClass = 'status-medium';
+            activityLabel = 'متوسط';
         }
+        
         var gmapsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
         var osmUrl = 'https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=15/' + lat + '/' + lng;
 
         html += '<div class="heatmap-point" data-index="' + idx + '" data-lat="' + lat + '" data-lng="' + lng + '">';
         html += '<div class="point-header">';
-        html += '<span class="point-status ' + statusClass + '">' + statusLabel + '</span>';
-        html += '<span class="point-frp">🔥 ' + frp.toFixed(1) + ' MW</span>';
+        html += '<span class="point-status ' + activityClass + '">' + activityLabel + '</span>';
+        html += '<span class="point-frp">🔥 ' + areaHa.toFixed(1) + ' هكتار</span>';
         html += '</div>';
         html += '<div class="point-details">';
         html += '<div class="point-detail"><span class="label">📍 الإحداثيات:</span> <span class="value">' + lat.toFixed(4) + ', ' + lng.toFixed(4) + '</span></div>';
         html += '<div class="point-detail"><span class="label">🏛️ الولاية:</span> <span class="value">' + sanitizeHTML(wilaya) + '</span></div>';
-        html += '<div class="point-detail"><span class="label">🌡️ السطوع:</span> <span class="value">' + brightness.toFixed(0) + ' K</span></div>';
-        html += '<div class="point-detail"><span class="label">📐 المساحة:</span> <span class="value">' + size + ' هكتار</span></div>';
-        html += '<div class="point-detail"><span class="label">✅ الثقة:</span> <span class="value">' + confidence + '%</span></div>';
-        html += '<div class="point-detail"><span class="label">🛰️ القمر:</span> <span class="value">' + satellite + ' (' + instrument + ')</span></div>';
-        html += '<div class="point-detail"><span class="label">☀️ الوقت:</span> <span class="value">' + daynightLabel + '</span></div>';
-        html += '<div class="point-detail"><span class="label">📅 التاريخ:</span> <span class="value">' + date + '</span></div>';
-        html += '<div class="point-detail"><span class="label">🕐 الوقت:</span> <span class="value">' + time + '</span></div>';
+        html += '<div class="point-detail"><span class="label">📐 المساحة:</span> <span class="value">' + areaHa.toFixed(2) + ' هكتار (' + (areaSqM / 10000).toFixed(2) + ' كم²)</span></div>';
+        html += '<div class="point-detail"><span class="label">🛰️ عودات الأقمار:</span> <span class="value">' + satReturns + ' مرة في آخر 24 ساعة</span></div>';
+        html += '<div class="point-detail"><span class="label">📊 مستوى النشاط:</span> <span class="value">' + activityLabel + '</span></div>';
         html += '</div>';
         html += '<div class="point-actions">';
         html += '<a href="' + gmapsUrl + '" target="_blank" class="btn-gps" title="فتح في خرائط جوجل"><i class="fas fa-directions"></i> GPS</a>';
