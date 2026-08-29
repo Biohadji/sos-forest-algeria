@@ -6,13 +6,22 @@
   <meta name="theme-color" content="#e74c3c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="SOS FOREST ALGERIA - تطبيق مراقبة الحرائق في الجزائر">
+  <meta name="apple-mobile-web-app-title" content="SOS Forest">
+  <meta name="description" content="SOS FOREST ALGERIA - تطبيق مراقبة حرائق الغابات في الجزائر">
+  <meta name="keywords" content="حرائق الغابات, الجزائر, مراقبة, SOS, forest fire, Algeria, PWA">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="SOS Forest">
+  <meta name="msapplication-TileColor" content="#e74c3c">
+  <meta name="msapplication-TileImage" content="icons/icon-192.png">
+  <meta name="msapplication-tooltip" content="SOS FOREST ALGERIA">
   <title>SOS FOREST ALGERIA</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23e74c3c' width='192' height='192' rx='32'/><text x='96' y='130' font-size='100' text-anchor='middle' fill='white'>🔥</text></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23e74c3c' width='192' height='192' rx='32'/><text x='96' y='130' font-size='100' text-anchor='middle' fill='white'>🔥</text></svg>">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
@@ -860,9 +869,39 @@
   <script src="js/nasa-api.js"></script>
   <script src="js/app.js"></script>
   <script>
+    // Register Service Worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(function(){});
+      navigator.serviceWorker.register('sw.js').then(function(reg) {
+        console.log('SW registered, scope:', reg.scope);
+        // Check for updates
+        reg.addEventListener('updatefound', function() {
+          var newWorker = reg.installing;
+          newWorker.addEventListener('statechange', function() {
+            if (newWorker.state === 'activated') {
+              if (confirm('تحديث جديد متاح! هل تريد إعادة تحميل الصفحة؟')) {
+                window.location.reload();
+              }
+            }
+          });
+        });
+      }).catch(function(err) {
+        console.log('SW registration failed:', err);
+      });
     }
+
+    // Detect standalone mode (PWA installed)
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      document.body.classList.add('pwa-standalone');
+    }
+
+    // Prevent pull-to-refresh on mobile
+    document.body.addEventListener('touchmove', function(e) {
+      if (e.target.closest('.fire-iframe-container, .chat-messages')) return;
+      if (window.scrollY === 0 && e.touches[0].clientY > 0) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
     populateWilayaDropdowns();
     var rd = document.getElementById('reportDate');
     var rt = document.getElementById('reportTime');
