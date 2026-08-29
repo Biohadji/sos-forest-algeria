@@ -861,27 +861,152 @@ function updateFiremapStats() {
     var high = 0;
     var medium = 0;
     var low = 0;
+    var byWilaya = {};
+    var totalFRP = 0;
+    var maxFRP = 0;
+    var satellites = { VIIRS: 0, MODIS: 0, other: 0 };
+
     firemapFireData.forEach(function (f) {
-        var frp = 0;
-        if (f.properties && f.properties.frp) {
-            frp = parseFloat(f.properties.frp);
-        }
-        if (frp > 40) {
+        var props = f.properties || {};
+        var frp = parseFloat(props.frp) || 0;
+        var confidence = parseFloat(props.confidence) || 0;
+        var sat = (props.satellite || '').toUpperCase();
+
+        totalFRP += frp;
+        if (frp > maxFRP) maxFRP = frp;
+
+        if (sat === 'VIIRS') satellites.VIIRS++;
+        else if (sat === 'MODIS') satellites.MODIS++;
+        else satellites.other++;
+
+        if (frp > 40 || confidence > 85) {
             high++;
-        } else if (frp > 20) {
+        } else if (frp > 20 || confidence > 65) {
             medium++;
         } else {
             low++;
         }
+
+        var coords = (f.geometry && f.geometry.coordinates) ? f.geometry.coordinates : [0, 0];
+        var lat = parseFloat(coords[1]) || 0;
+        var lng = parseFloat(coords[0]) || 0;
+        var wilaya = getWilayaFromCoords(lat, lng);
+        if (wilaya) {
+            byWilaya[wilaya] = (byWilaya[wilaya] || 0) + 1;
+        }
     });
-    var totalEl = document.getElementById('firmsCount');
-    var highEl = document.getElementById('firmsHigh');
-    var mediumEl = document.getElementById('firmsMedium');
-    var lowEl = document.getElementById('firmsLow');
-    if (totalEl) totalEl.textContent = total;
-    if (highEl) highEl.textContent = high;
-    if (mediumEl) mediumEl.textContent = medium;
-    if (lowEl) lowEl.textContent = low;
+
+    setEl('firmsCount', total);
+    setEl('firmsHigh', high);
+    setEl('firmsMedium', medium);
+    setEl('firmsLow', low);
+    setEl('statCritical', high);
+    setEl('statHigh', medium);
+    setEl('statLow', low);
+
+    var avgFRP = total > 0 ? (totalFRP / total).toFixed(1) : 0;
+    setEl('avgFrp', avgFRP);
+    setEl('maxFrp', maxFRP.toFixed(1));
+    setEl('satViirs', satellites.VIIRS);
+    setEl('satModis', satellites.MODIS);
+
+    var topWilayas = Object.entries(byWilaya).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 5);
+    var wilayaContainer = document.getElementById('topWilayas');
+    if (wilayaContainer) {
+        if (topWilayas.length === 0) {
+            wilayaContainer.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:12px;padding:8px;">لا توجد بيانات</div>';
+        } else {
+            var html = '';
+            topWilayas.forEach(function (item) {
+                var pct = total > 0 ? ((item[1] / total) * 100).toFixed(0) : 0;
+                html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-glass);font-size:12px;">' +
+                    '<span style="color:var(--text-primary);">' + item[0] + '</span>' +
+                    '<span style="color:#e74c3c;font-weight:700;">' + item[1] + ' <span style="color:var(--text-muted);font-weight:400;">(' + pct + '%)</span></span>' +
+                    '</div>';
+            });
+            wilayaContainer.innerHTML = html;
+        }
+    }
+}
+
+function getWilayaFromCoords(lat, lng) {
+    var wilayasApprox = [
+        { name: 'أدرار', lat: 27.87, lng: -0.29 },
+        { name: 'الشلف', lat: 36.17, lng: 1.33 },
+        { name: 'الأغواط', lat: 33.77, lng: 2.86 },
+        { name: 'أم البواقي', lat: 35.87, lng: 7.11 },
+        { name: 'باتنة', lat: 35.56, lng: 6.17 },
+        { name: 'بجاية', lat: 36.75, lng: 5.08 },
+        { name: 'بسكرة', lat: 34.85, lng: 5.73 },
+        { name: 'بشار', lat: 31.62, lng: -2.22 },
+        { name: 'البليدة', lat: 36.47, lng: 2.83 },
+        { name: 'البويرة', lat: 36.38, lng: 3.90 },
+        { name: 'تمنراست', lat: 19.06, lng: 1.75 },
+        { name: 'تبسة', lat: 35.40, lng: 8.12 },
+        { name: 'تلمسان', lat: 34.88, lng: -1.31 },
+        { name: 'تيارت', lat: 35.39, lng: 1.32 },
+        { name: 'تيزي وزو', lat: 36.71, lng: 4.05 },
+        { name: 'الجزائر', lat: 36.75, lng: 3.06 },
+        { name: 'الجلفة', lat: 34.67, lng: 3.25 },
+        { name: 'جيجل', lat: 36.82, lng: 5.77 },
+        { name: 'سطيف', lat: 36.19, lng: 5.41 },
+        { name: 'سعيدة', lat: 34.83, lng: 0.15 },
+        { name: 'سكيكدة', lat: 36.88, lng: 6.91 },
+        { name: 'سيدي بلعباس', lat: 35.19, lng: 1.29 },
+        { name: 'عنابة', lat: 36.90, lng: 7.77 },
+        { name: 'قالمة', lat: 36.46, lng: 7.43 },
+        { name: 'قسنطينة', lat: 36.37, lng: 6.61 },
+        { name: 'المدية', lat: 36.27, lng: 2.75 },
+        { name: 'مستغانم', lat: 35.93, lng: 0.09 },
+        { name: 'المسيلة', lat: 35.70, lng: 4.54 },
+        { name: 'معسكر', lat: 35.40, lng: 0.14 },
+        { name: 'ورقلة', lat: 31.95, lng: 5.32 },
+        { name: 'وهران', lat: 35.69, lng: -0.63 },
+        { name: 'البيض', lat: 33.68, lng: 2.19 },
+        { name: 'إليزي', lat: 26.38, lng: 8.47 },
+        { name: 'برج بوعريريج', lat: 36.07, lng: 4.76 },
+        { name: 'بومرداس', lat: 36.71, lng: 3.48 },
+        { name: 'الطارف', lat: 36.77, lng: 8.31 },
+        { name: 'تندوف', lat: 27.67, lng: -8.13 },
+        { name: 'تيسمسيلت', lat: 35.60, lng: 1.81 },
+        { name: 'الوادي', lat: 33.35, lng: 6.86 },
+        { name: 'خنشلة', lat: 35.43, lng: 7.14 },
+        { name: 'سوق أهراس', lat: 36.29, lng: 7.53 },
+        { name: 'تيبازة', lat: 36.59, lng: 2.45 },
+        { name: 'ميلة', lat: 36.30, lng: 6.27 },
+        { name: 'عين الدفلى', lat: 36.26, lng: 1.97 },
+        { name: 'النعامة', lat: 33.26, lng: -0.31 },
+        { name: 'عين تموشنت', lat: 35.30, lng: -1.14 },
+        { name: 'غرداية', lat: 32.49, lng: 3.67 },
+        { name: 'غليزان', lat: 35.73, lng: 0.55 },
+        { name: 'تيميمون', lat: 19.70, lng: 1.88 },
+        { name: 'برج باجي مختار', lat: 21.32, lng: 0.95 },
+        { name: 'أولاد جلال', lat: 34.42, lng: 1.66 },
+        { name: 'بني عباس', lat: 30.13, lng: 1.95 },
+        { name: 'عين صلاح', lat: 26.23, lng: 0.17 },
+        { name: 'تقرت', lat: 33.13, lng: 6.06 },
+        { name: 'جانت', lat: 24.55,_CID': 8.17 },
+        { name: 'المغير', lat: 32.18, lng: 3.69 },
+        { name: 'المنيعة', lat: 32.10, lng: 5.41 }
+    ];
+
+    var minDist = Infinity;
+    var closest = null;
+    wilayasApprox.forEach(function (w) {
+        var dlat = lat - w.lat;
+        var dlng = lng - w.lng;
+        var dist = Math.sqrt(dlat * dlat + dlng * dlng);
+        if (dist < minDist) {
+            minDist = dist;
+            closest = w.name;
+        }
+    });
+    return minDist < 2.5 ? closest : null;
+}
+
+function setEl(id, value) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = value;
 }
 
 function renderFiremapPoints() {
@@ -1628,8 +1753,17 @@ function loadSolidarityPosts() {
 }
 
 /* ============================================================
-   8. AI ASSISTANT
+   8. AI ASSISTANT — Real API-powered
    ============================================================ */
+
+var AI_API_KEY = localStorage.getItem('sosForestAIKey') || '';
+var AI_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+
+function setAiApiKey(key) {
+    AI_API_KEY = key.trim();
+    localStorage.setItem('sosForestAIKey', AI_API_KEY);
+    showToast(AI_API_KEY ? 'تم حفظ مفتاح API' : 'تم إزالة مفتاح API', 'success');
+}
 
 function sendAiMessage() {
     var input = document.getElementById('aiChatInput');
@@ -1639,18 +1773,20 @@ function sendAiMessage() {
     addAiMessage(question, 'user');
     input.value = '';
     input.focus();
-    setTimeout(function () {
-        var response = getAiResponse(question);
+    showAiTyping();
+    getAiResponse(question).then(function (response) {
+        hideAiTyping();
         addAiMessage(response, 'ai');
-    }, 600);
+    });
 }
 
 function aiQuickQuestion(question) {
     addAiMessage(question, 'user');
-    setTimeout(function () {
-        var response = getAiResponse(question);
+    showAiTyping();
+    getAiResponse(question).then(function (response) {
+        hideAiTyping();
         addAiMessage(response, 'ai');
-    }, 600);
+    });
 }
 
 function handleAiKeyPress(e) {
@@ -1658,6 +1794,25 @@ function handleAiKeyPress(e) {
         e.preventDefault();
         sendAiMessage();
     }
+}
+
+function showAiTyping() {
+    var container = document.getElementById('aiChatMessages');
+    if (!container) return;
+    var typing = document.createElement('div');
+    typing.className = 'ai-message ai';
+    typing.id = 'aiTyping';
+    typing.innerHTML = '<div class="message-content ai-message-bubble">' +
+        '<div class="ai-avatar">🤖</div>' +
+        '<div class="ai-text typing-dots"><span></span><span></span><span></span></div>' +
+        '</div>';
+    container.appendChild(typing);
+    container.scrollTop = container.scrollHeight;
+}
+
+function hideAiTyping() {
+    var typing = document.getElementById('aiTyping');
+    if (typing) typing.remove();
 }
 
 function addAiMessage(text, type) {
@@ -1668,7 +1823,7 @@ function addAiMessage(text, type) {
     var time = new Date().toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
     if (type === 'user') {
         msgDiv.innerHTML = '<div class="message-content user-message">' +
-            '<p>' + text + '</p>' +
+            '<p>' + sanitizeHTML(text) + '</p>' +
             '<span class="message-time">' + time + '</span>' +
             '</div>';
     } else {
@@ -1682,7 +1837,49 @@ function addAiMessage(text, type) {
     container.scrollTop = container.scrollHeight;
 }
 
-function getAiResponse(question) {
+async function getAiResponse(question) {
+    var q = question.toLowerCase().trim();
+
+    if (AI_API_KEY) {
+        try {
+            var systemPrompt = 'أنت مساعد ذكي متخصص في مراقبة حرائق الغابات في الجزائر. أنت تعمل في تطبيق "SOS FOREST ALGERIA". ' +
+                'أجب على الأسئلة بدقة باستخدام معرفتك العامة والمعلومات الرسمية. ' +
+                'إذا كان السؤال يتعلق بالجزائر، استخدم معلومات دقيقة عن Algeria. ' +
+                'أجب بلغة المستخدم (عربي أو فرنسي أو إنجليزي). ' +
+                'كن مفيداً ومختصاً ودقيقاً.';
+
+            var response = await fetch(AI_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + AI_API_KEY
+                },
+                body: JSON.stringify({
+                    model: 'deepseek/deepseek-chat-v3-0324:free',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: question }
+                    ],
+                    max_tokens: 1024,
+                    temperature: 0.7
+                })
+            });
+
+            if (response.ok) {
+                var data = await response.json();
+                if (data.choices && data.choices[0]) {
+                    return data.choices[0].message.content.replace(/\n/g, '<br>');
+                }
+            }
+        } catch (err) {
+            console.log('AI API error, falling back to local:', err);
+        }
+    }
+
+    return getLocalAiResponse(question);
+}
+
+function getLocalAiResponse(question) {
     var q = question.toLowerCase().trim();
     var reports = getAllReports();
     var shelters = getAllShelters();
@@ -1702,11 +1899,10 @@ function getAiResponse(question) {
     if (q.includes('إبلاغ') || q.includes('بلاغ') || q.includes('report') || q.includes('signaler') || q.includes('حريق') || q.includes('fire')) {
         return '📋 <strong>كيفية الإبلاغ عن حريق غابات:</strong><br><br>' +
             '1️⃣ انتقل إلى قسم "البلاغات" من القائمة<br>' +
-            '2️⃣ أدخل بياناتك (رقم الهاتف، الولاية، البلدية، الحي)<br>' +
+            '2️⃣ أدخل بياناتك (رقم الهاتف، الولاية، اسم الحي)<br>' +
             '3️⃣ حدد موقع الحريق عبر زر GPS<br>' +
             '4️⃣ أرفق صورة للحريق إن أمكن<br>' +
-            '5️⃣ أدخل التاريخ والوقت<br>' +
-            '6️⃣ اضغط "إرسال البلاغ"<br><br>' +
+            '5️⃣ اضغط "إرسال البلاغ"<br><br>' +
             '📞 أو اتصل فوراً بـ: <strong>14</strong> (الإطفاء) أو <strong>1414</strong> (الحماية المدنية)<br><br>' +
             '⚠️ <strong>مهم:</strong> لا تقترب من الحريق. حافظ على مسافة أمان.';
     }
@@ -1749,35 +1945,12 @@ function getAiResponse(question) {
             '💡 تواصل مع الجهات المحلية في ولايتك.';
     }
 
-    if (q.includes('طريق') || q.includes('إغلاق') || q.includes('route') || q.includes('fermée') || q.includes('طريق') || q.includes('infrastructure')) {
-        var activeReports = reports.filter(function (r) { return r.status === 'active'; }).length;
-        return '🚧 <strong>معلومات الطرق والبنية التحتية:</strong><br><br>' +
-            'عدد البلاغات النشطة: <strong>' + activeReports + '</strong><br><br>' +
-            '🛣️ <strong>للحصول على معلومات محدثة عن الطرق:</strong><br>' +
-            '• اتصل بمركز المعلومات: <strong>1055</strong><br>' +
-            '• تابع صفحة الحماية المدنية على فيسبوك<br>' +
-            '• استخدم تطبيق المرور الرسمي<br>' +
-            '• استمع للراديو المحلي<br><br>' +
-            '⚠️ في حالة وجود حريق بالقرب من طريق، تجنب المرور.';
-    }
-
-    if (q.includes('منطقة') || q.includes('متضرر') || q.includes('zone') || q.includes('area') || q.includes('مناطق') || q.includes('affected')) {
-        return '📍 <strong>المناطق المتضررة:</strong><br><br>' +
-            '🔥 عدد حرائق النشطة حالياً: <strong>' + activeFires + '</strong><br>' +
-            '📋 عدد البلاغات النشطة: <strong>' + reports.filter(function (r) { return r.status === 'active'; }).length + '</strong><br><br>' +
-            '📡 <strong>للاطلاع على المناطق المتضررة:</strong><br>' +
-            '• قسم "خريطة الحرائق" للمناطق النشطة<br>' +
-            '• قسم "البلاغات" للبلاغات الواردة<br>' +
-            '• خدمة تحديد المواقع للمناطق القريبة منك<br><br>' +
-            '⚠️ لا تقترب من المناطق المشتعلة. حافظ على مسافة أمان.';
-    }
-
     if (q.includes('مأوى') || q.includes('shelter') || q.includes('refuge') || q.includes('إيواء') || q.includes('نزوح')) {
         var shelterCount = shelters.length;
         return '🏠 <strong>مراكز الإيواء والحماية:</strong><br><br>' +
             'عدد مراكز الإيواء المسجلة: <strong>' + shelterCount + '</strong><br><br>' +
             '📍 <strong>يمكنك:</strong><br>' +
-            '• تسجيل مأوى جديد من قسم "المأوى"<br>' +
+            '• تسجيل مأوى جديد من قسم "الإيواء"<br>' +
             '• الاطلاع على المراكز القريبة<br>' +
             '• الاتصال بالحماية المدنية: <strong>14</strong><br><br>' +
             '🏗️ إذا كنت تعرف مكان آمن يُمكن استعماله كمأوى، سجّله في التطبيق!';
@@ -1806,28 +1979,11 @@ function getAiResponse(question) {
             '🛡️ نصائح السلامة والحماية<br>' +
             '❤️ التبرع والتطوع والمساعدة<br>' +
             '🏛️ الجمعيات والمؤسسات المتخصصة<br>' +
-            '🚧 معلومات الطرق والبنية التحتية<br>' +
             '📍 المناطق المتضررة والحرائق النشطة<br>' +
             '🏠 مراكز الإيواء والحماية<br>' +
             'ℹ️ معلومات عن التطبيق<br><br>' +
+            (!AI_API_KEY ? '⚙️ <strong>للمزيد من الإمكانات:</strong> أضف مفتاح OpenRouter API من إعدادات المساعد<br><br>' : '') +
             '💡 اسألني أي سؤال وسأحاول مساعدتك! 😊';
-    }
-
-    if (q.includes('طقس') || q.includes('weather') || q.includes('météo') || q.includes('حرارة') || q.includes('رطوبة')) {
-        var tempEl = document.getElementById('currentTemp');
-        var humEl = document.getElementById('currentHumidity');
-        var windEl = document.getElementById('currentWind');
-        var rainEl = document.getElementById('currentRain');
-        var temp = tempEl ? tempEl.textContent : '--';
-        var hum = humEl ? humEl.textContent : '--';
-        var wind = windEl ? windEl.textContent : '--';
-        var rain = rainEl ? rainEl.textContent : '--';
-        return '🌤️ <strong>الطقس الحالي في الجزائر:</strong><br><br>' +
-            '🌡️ الحرارة: <strong>' + temp + '</strong><br>' +
-            '💧 الرطوبة: <strong>' + hum + '</strong><br>' +
-            '💨 الرياح: <strong>' + wind + '</strong><br>' +
-            '🌧️ الأمطار: <strong>' + rain + '</strong><br><br>' +
-            '💡 الطقس الجاف والحرارة العالية تزيد خطر حرائق الغابات.';
     }
 
     if (q.includes('إحصائيات') || q.includes('stat') || q.includes('stats') || q.includes('عدد')) {
@@ -1840,20 +1996,46 @@ function getAiResponse(question) {
             '💡 ساهم في تحسين الإحصائيات بالإبلاغ والمشاركة!';
     }
 
-    return '🤖 <strong>شكراً لك!</strong><br><br>' +
-        'حاولت فهم سؤالك لكن لم أتمكن من الإجابة بدقة.<br><br>' +
-        '💡 <strong>يمكنني مساعدتك في:</strong><br><br>' +
+    return '🤖 <strong>أحتاج إلى مفتاح API للإجابة على هذا السؤال.</strong><br><br>' +
+        'لتفعيل المساعد الذكي الكامل:<br>' +
+        '1️⃣ احصل على مفتاح مجاني من <a href="https://openrouter.ai/keys" target="_blank">OpenRouter</a><br>' +
+        '2️⃣ اضغط على ⚙️ في أعلى المحادثة<br>' +
+        '3️⃣ أدخل المفتاح<br><br>' +
+        '💡 <strong>بدون مفتاح API، يمكنني مساعدتك في:</strong><br>' +
         '• 🚨 أرقام الطوارئ والإسعاف<br>' +
         '• 📋 الإبلاغ عن حرائق الغابات<br>' +
         '• 🛡️ نصائح السلامة والحماية<br>' +
         '• ❤️ التبرع والتطوع<br>' +
-        '• 🏛️ الجمعيات والمؤسسات<br>' +
-        '• 🚧 الطرق المغلقة والبنية التحتية<br>' +
-        '• 📍 المناطق المتضررة<br>' +
         '• 🏠 مراكز الإيواء<br>' +
-        '• 🌤️ معلومات الطقس<br>' +
-        '• 📊 الإحصائيات<br><br>' +
-        'اكتب سؤالك بوضوح وسأحاول مساعدتك! 😊';
+        '• ℹ️ معلومات التطبيق';
+}
+
+function showAiSettings() {
+    var currentKey = AI_API_KEY;
+    var modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = '<div style="background:var(--card-bg);border:1px solid var(--border-glass);border-radius:16px;padding:24px;max-width:450px;width:100%;max-height:90vh;overflow-y:auto;">' +
+        '<h3 style="margin:0 0 16px;color:var(--text-primary);font-size:18px;">⚙️ إعدادات المساعد الذكي</h3>' +
+        '<p style="font-size:13px;color:var(--text-secondary);margin:0 0 16px;line-height:1.6;">لتفعيل المساعد الذكي الكامل، أضف مفتاح API مجاني من OpenRouter. بدون مفتاح، يعمل المساعد بالأسئلة الشائعة فقط.</p>' +
+        '<label style="display:block;font-size:13px;color:var(--text-primary);margin-bottom:6px;">مفتاح API (OpenRouter)</label>' +
+        '<input type="password" id="aiApiKeyInput" value="' + (currentKey || '') + '" placeholder="sk-or-v1-..." style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid var(--border-glass);border-radius:8px;color:var(--text-primary);font-size:14px;box-sizing:border-box;font-family:monospace;">' +
+        '<div style="margin-top:12px;display:flex;gap:8px;">' +
+        '<a href="https://openrouter.ai/keys" target="_blank" style="padding:8px 16px;background:rgba(0,150,255,0.1);border:1px solid rgba(0,150,255,0.2);border-radius:8px;color:#0096ff;font-size:13px;text-decoration:none;font-family:Cairo;">🔑 احصل على مفتاح مجاني</a>' +
+        '</div>' +
+        '<div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">' +
+        '<button onclick="this.closest(\'.modal-overlay\').remove()" style="padding:8px 16px;background:rgba(255,255,255,0.05);border:1px solid var(--border-glass);border-radius:8px;color:var(--text-secondary);cursor:pointer;font-family:Cairo;font-size:13px;">إلغاء</button>' +
+        '<button onclick="saveAiSettings()" style="padding:8px 16px;background:#00c853;color:white;border:none;border-radius:8px;cursor:pointer;font-family:Cairo;font-size:13px;font-weight:700;">حفظ</button>' +
+        '</div>' +
+        '</div>';
+    document.body.appendChild(modal);
+}
+
+function saveAiSettings() {
+    var key = document.getElementById('aiApiKeyInput').value.trim();
+    setAiApiKey(key);
+    var modal = document.querySelector('.modal-overlay');
+    if (modal) modal.remove();
 }
 
 /* ============================================================
@@ -2024,13 +2206,13 @@ var currentLang = localStorage.getItem('sosForestLang') || 'ar';
 
 var translations = {
     ar: {
-        navPredictions: '🔥 خريطة الحرائق',
+        navPredictions: '🔥 وضعية الحرائق',
         navReports: '🚨 التبليغات',
         navShelters: '🏕️ الإيواء',
         navSolidarity: '🤲 التضامن',
         navAiAssistant: '🤖 المساعد',
         navAdmin: '⚙️ التحكم',
-        sectionPredictionsTitle: '🔥 خريطة حرائق الجزائر',
+        sectionPredictionsTitle: '🔥 وضعية الحرائق الآن',
         sectionPredictionsDescription: 'مراقبة حرائق الغابات في الجزائر بالوقت الحقيقي — بيانات مباشرة من الأقمار الصناعية',
         sectionReportsTitle: '🚨 التبليغات عن الحرائق',
         sectionReportsDescription: 'إرسال تبليغات فورية عن حرائق الغابات إلى المصالح المعنية',
@@ -2107,13 +2289,13 @@ var translations = {
         adminSolidarityTitle: 'حملات التضامن والإغاثة'
     },
     fr: {
-        navPredictions: '🔥 Carte des feux',
+        navPredictions: '🔥 Situation feux',
         navReports: '🚨 Signalements',
         navShelters: '🏕️ Accueil',
         navSolidarity: '🤲 Solidarité',
         navAiAssistant: '🤖 Assistant',
         navAdmin: '⚙️ Admin',
-        sectionPredictionsTitle: '🔥 Carte des feux',
+        sectionPredictionsTitle: '🔥 Situation des feux actuelle',
         sectionPredictionsDescription: 'Surveillance des feux de forêt en temps réel - données satellitaires en direct',
         sectionReportsTitle: '🚨 Signalements de feux',
         sectionReportsDescription: 'Envoyer des signalements de feux de forêt aux services compétents',
@@ -2190,13 +2372,13 @@ var translations = {
         adminSolidarityTitle: 'Campagnes de solidarité et secours'
     },
     en: {
-        navPredictions: '🔥 Fire Map',
+        navPredictions: '🔥 Fire Status',
         navReports: '🚨 Reports',
         navShelters: '🏕️ Shelter',
         navSolidarity: '🤲 Solidarity',
         navAiAssistant: '🤖 Assistant',
         navAdmin: '⚙️ Control',
-        sectionPredictionsTitle: '🔥 Algeria Fire Map',
+        sectionPredictionsTitle: '🔥 Current Fire Status',
         sectionPredictionsDescription: 'Real-time forest fire monitoring in Algeria - live satellite data',
         sectionReportsTitle: '🚨 Fire Reports',
         sectionReportsDescription: 'Send instant reports about forest fires to the relevant authorities',
