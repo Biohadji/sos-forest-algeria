@@ -338,19 +338,45 @@ function handleRegister(e) {
         });
     }
     var token = generateToken();
-    var pendingUser = {
-        email: email,
-        phone: cleanPhone,
-        wilaya: wilaya,
-        password: password,
-        token: token,
-        confirmed: false,
-        createdAt: getCurrentTimestamp()
-    };
-    pendingUsers.push(pendingUser);
-    savePendingUsers(pendingUsers);
-    showConfirmScreen(email);
-    showToast('تم إرسال رابط التأكيد إلى بريدك الإلكتروني', 'info');
+
+    // التحقق من تكوين EmailJS
+    var emailjsConfigured = (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY');
+
+    if (emailjsConfigured) {
+        // إرسال بريد تأكيد عبر EmailJS
+        var pendingUser = {
+            email: email,
+            phone: cleanPhone,
+            wilaya: wilaya,
+            password: password,
+            token: token,
+            confirmed: false,
+            createdAt: getCurrentTimestamp()
+        };
+        pendingUsers.push(pendingUser);
+        savePendingUsers(pendingUsers);
+
+        var confirmLink = APP_URL + '?confirm=' + token + '&email=' + encodeURIComponent(email);
+        sendConfirmationEmail(email, confirmLink);
+        showConfirmScreen(email);
+        showToast('تم إرسال رابط التأكيد إلى بريدك الإلكتروني', 'info');
+    } else {
+        // لا يوجد EmailJS - التسجيل المباشر بدون تأكيد
+        var newUser = {
+            email: email,
+            phone: cleanPhone,
+            wilaya: wilaya,
+            password: password,
+            confirmed: true,
+            createdAt: getCurrentTimestamp()
+        };
+        var allUsers = getUsers();
+        allUsers.push(newUser);
+        saveUsers(allUsers);
+
+        showToast('تم التسجيل بنجاح! يمكنك تسجيل الدخول الآن', 'success');
+        showLogin();
+    }
 }
 
 function confirmEmail() {
