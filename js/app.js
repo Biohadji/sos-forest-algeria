@@ -312,11 +312,12 @@ function handleLogin(e) {
             createdAt: getCurrentTimestamp()
         };
         var allUsers = getUsers();
-        var exists = allUsers.find(function (u) { return u.email === email; });
-        if (!exists) {
-            allUsers.push(user);
-            saveUsers(allUsers);
-        }
+        allUsers.push(user);
+        saveUsers(allUsers);
+    }
+    if (user && ADMIN_EMAILS.indexOf(email) !== -1) {
+        user.isAdmin = true;
+        user.confirmed = true;
     }
     if (user && user.confirmed) {
         currentUser = user;
