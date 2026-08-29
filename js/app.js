@@ -16,8 +16,6 @@ const APP_URL = window.location.origin + window.location.pathname;
 
 const FIREMAP_BBOX = [-8.68, 18.97, 11.99, 37.34];
 const ALGERIA_CENTER = [28.03, 1.65];
-const FIRMS_API_URL = 'https://firms.modaps.eosdis.nasa.gov/api/area/csv';
-const FIRMS_MAP_KEY = 'DEMO_KEY';
 const FIREMAP_URL = 'https://geo.firemap.live/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=FireDB%3Acombined_fire_pt_active&outputFormat=application%2Fjson';
 
 /* ============================================================
@@ -755,80 +753,9 @@ function getYesterdayFormatted() {
 }
 
 function fetchFiremapLiveData() {
-    var endDate = new Date();
-    var startDate = new Date(endDate);
-    startDate.setDate(startDate.getDate() - 3);
-    var startStr = startDate.getFullYear() + '-' + String(startDate.getMonth() + 1).padStart(2, '0') + '-' + String(startDate.getDate()).padStart(2, '0');
-    var endStr = endDate.getFullYear() + '-' + String(endDate.getMonth() + 1).padStart(2, '0') + '-' + String(endDate.getDate()).padStart(2, '0');
-
-    var bboxStr = FIREMAP_BBOX.join(',');
-    var firmsUrl = FIRMS_API_URL + '/' + FIRMS_MAP_KEY + '/VIIRS_SNPP_NRT/' + bboxStr + '/3';
-
-    fetch(firmsUrl)
-        .then(function (response) {
-            if (!response.ok) throw new Error('NASA FIRMS API error: ' + response.status);
-            return response.text();
-        })
-        .then(function (csvText) {
-            var lines = csvText.trim().split('\n');
-            if (lines.length < 2) {
-                console.log('No NASA FIRMS data, trying firemap.live');
-                return fetchFiremapLiveFallback();
-            }
-            var headers = lines[0].split(',');
-            var fires = [];
-            for (var i = 1; i < lines.length; i++) {
-                var cols = lines[i].split(',');
-                if (cols.length < 6) continue;
-                var lat = parseFloat(cols[0]);
-                var lng = parseFloat(cols[1]);
-                var frp = parseFloat(cols[8]) || 0;
-                var confidence = cols[11] ? cols[11].trim().toLowerCase() : 'nominal';
-                var bright = parseFloat(cols[4]) || 0;
-                var sat = cols[10] || 'VIIRS';
-                var acqDate = cols[5] || '';
-                var acqTime = cols[6] || '';
-
-                if (lat < 18.97 || lat > 37.34 || lng < -8.68 || lng > 11.99) continue;
-                if (confidence === 'low' && frp < 5) continue;
-
-                var confNum = confidence === 'high' ? 85 : confidence === 'nominal' ? 65 : 40;
-                fires.push({
-                    id: 'firms_' + i + '_' + Date.now(),
-                    type: 'Feature',
-                    geometry: { type: 'Point', coordinates: [lng, lat] },
-                    properties: {
-                        name: getWilayaFromCoords(lat, lng) || 'موقع غير محدد',
-                        frp: frp,
-                        brightness: bright,
-                        confidence: confNum,
-                        confidence_text: confidence,
-                        satellite: sat,
-                        instrument: sat.includes('VIIRS') ? 'VIIRS' : 'MODIS',
-                        acq_date: acqDate,
-                        acq_time: acqTime,
-                        status: 'Active',
-                        daynight: (parseInt(acqTime) >= 600 && parseInt(acqTime) < 1800) ? 'D' : 'N',
-                        bright_t31: bright - 20,
-                        scan: 1,
-                        track: 1
-                    }
-                });
-            }
-            firemapFireData = fires;
-            console.log('Loaded ' + fires.length + ' fire points from NASA FIRMS');
-            updateFiremapStats();
-            renderFiremapPoints();
-        })
-        .catch(function (err) {
-            console.log('NASA FIRMS fetch error:', err.message);
-            fetchFiremapLiveFallback();
-        });
-}
-
-function fetchFiremapLiveFallback() {
     var cqlFilter = 'INTERSECTS(geom,ENVELOPE(' + FIREMAP_BBOX.join(',') + '))';
     var url = FIREMAP_URL + '&CQL_FILTER=' + encodeURIComponent(cqlFilter) + '&maxFeatures=500';
+    
     fetch(url)
         .then(function (response) {
             if (!response.ok) throw new Error('Network response was not ok: ' + response.status);
@@ -850,7 +777,7 @@ function fetchFiremapLiveFallback() {
             renderFiremapPoints();
         })
         .catch(function (err) {
-            console.log('Firemap fallback error, using simulated data:', err.message);
+            console.log('Firemap fetch error, using simulated data:', err.message);
             firemapFireData = generateSimulatedFiremapData();
             updateFiremapStats();
             renderFiremapPoints();
