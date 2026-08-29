@@ -120,13 +120,13 @@ document.addEventListener('DOMContentLoaded', function () {
 function checkConfirmation() {
     var params = new URLSearchParams(window.location.search);
     var confirmToken = params.get('confirm');
-    var confirmEmail = params.get('email');
-    if (confirmToken && confirmEmail) {
+    var confirmEmailAddress = params.get('email');
+    if (confirmToken && confirmEmailAddress) {
         pendingRegistration = {
             token: confirmToken,
-            email: confirmEmail
+            email: confirmEmailAddress
         };
-        confirmEmail();
+        doConfirmEmail();
     }
 }
 
@@ -328,58 +328,23 @@ function handleRegister(e) {
         showToast('البريد الإلكتروني مسجل مسبقاً', 'error');
         return;
     }
-    var pendingUsers = getPendingUsers();
-    var pendingExists = pendingUsers.find(function (u) {
-        return u.email === email;
-    });
-    if (pendingExists) {
-        pendingUsers = pendingUsers.filter(function (u) {
-            return u.email !== email;
-        });
-    }
-    var token = generateToken();
 
-    // التحقق من تكوين EmailJS
-    var emailjsConfigured = (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY');
+    var newUser = {
+        email: email,
+        phone: cleanPhone,
+        wilaya: wilaya,
+        password: password,
+        confirmed: true,
+        createdAt: getCurrentTimestamp()
+    };
+    users.push(newUser);
+    saveUsers(users);
 
-    if (emailjsConfigured) {
-        // إرسال بريد تأكيد عبر EmailJS
-        var pendingUser = {
-            email: email,
-            phone: cleanPhone,
-            wilaya: wilaya,
-            password: password,
-            token: token,
-            confirmed: false,
-            createdAt: getCurrentTimestamp()
-        };
-        pendingUsers.push(pendingUser);
-        savePendingUsers(pendingUsers);
-
-        var confirmLink = APP_URL + '?confirm=' + token + '&email=' + encodeURIComponent(email);
-        sendConfirmationEmail(email, confirmLink);
-        showConfirmScreen(email);
-        showToast('تم إرسال رابط التأكيد إلى بريدك الإلكتروني', 'info');
-    } else {
-        // لا يوجد EmailJS - التسجيل المباشر بدون تأكيد
-        var newUser = {
-            email: email,
-            phone: cleanPhone,
-            wilaya: wilaya,
-            password: password,
-            confirmed: true,
-            createdAt: getCurrentTimestamp()
-        };
-        var allUsers = getUsers();
-        allUsers.push(newUser);
-        saveUsers(allUsers);
-
-        showToast('تم التسجيل بنجاح! يمكنك تسجيل الدخول الآن', 'success');
-        showLogin();
-    }
+    showToast('تم التسجيل بنجاح! يمكنك تسجيل الدخول الآن', 'success');
+    showLogin();
 }
 
-function confirmEmail() {
+function doConfirmEmail() {
     if (!pendingRegistration) return;
     var pendingUsers = getPendingUsers();
     var pendingIdx = pendingUsers.findIndex(function (u) {
@@ -428,6 +393,30 @@ function generateToken() {
         token += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return token;
+}
+
+function sendConfirmationEmail(toEmail, confirmLink) {
+    if (typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'YOUR_EMAILJS_PUBLIC_KEY') {
+        console.log('EmailJS not configured, skipping email');
+        return;
+    }
+    try {
+        var templateParams = {
+            to_email: toEmail,
+            confirm_link: confirmLink,
+            app_name: 'SOS FOREST ALGERIA',
+            message: 'مرحباً! يرجى النقر على الرابط التالي لتأكيد بريدك الإلكتروني:'
+        };
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+            .then(function (response) {
+                console.log('Confirmation email sent:', response.status);
+            })
+            .catch(function (error) {
+                console.error('Email send failed:', error);
+            });
+    } catch (e) {
+        console.error('EmailJS error:', e);
+    }
 }
 
 function getUsers() {
