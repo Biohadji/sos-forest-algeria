@@ -439,34 +439,34 @@
               </div>
 
               <div class="form-group">
-                <label>البلدية <span class="required">*</span></label>
+                <label>اسم الحي <span class="required">*</span></label>
                 <div class="input-wrapper">
-                  <input type="text" id="reportMunicipality" class="form-input" placeholder="اسم البلدية" required>
-                  <span class="input-icon">🏘️</span>
+                  <input type="text" id="reportNeighborhood" class="form-input" placeholder="اسم الحي" required>
+                  <span class="input-icon">🏠</span>
                 </div>
               </div>
 
               <div class="form-group">
-                <label>اسم الحي</label>
+                <label>البلدية</label>
                 <div class="input-wrapper">
-                  <input type="text" id="reportNeighborhood" class="form-input" placeholder="اسم الحي (اختياري)">
-                  <span class="input-icon">🏠</span>
+                  <input type="text" id="reportMunicipality" class="form-input" placeholder="اسم البلدية (اختياري)">
+                  <span class="input-icon">🏘️</span>
                 </div>
               </div>
 
               <div class="form-group full-width">
                 <label>موقع الحريق <span class="required">*</span></label>
-                <button type="button" id="gpsBtn" class="gps-btn">
+                <button type="button" id="gpsBtn" class="gps-btn" onclick="getGPSCoords()">
                   <span>📍</span>
                   <span>تحديد موقعي GPS</span>
                 </button>
                 <div class="gps-coords" id="gpsCoords"></div>
-                <input type="hidden" id="reportLat" value="">
-                <input type="hidden" id="reportLng" value="">
+                <input type="hidden" id="reportLat" value="" required>
+                <input type="hidden" id="reportLng" value="" required>
               </div>
 
               <div class="form-group full-width">
-                <label>صورة الموقع</label>
+                <label>صورة الموقع (اختياري)</label>
                 <div class="image-upload">
                   <input type="file" id="reportImage" accept="image/*" capture="environment">
                   <div class="upload-icon">📷</div>
@@ -477,17 +477,17 @@
               </div>
 
               <div class="form-group">
-                <label>التاريخ <span class="required">*</span></label>
+                <label>التاريخ</label>
                 <div class="input-wrapper">
-                  <input type="date" id="reportDate" class="form-input" required>
+                  <input type="date" id="reportDate" class="form-input">
                   <span class="input-icon">📅</span>
                 </div>
               </div>
 
               <div class="form-group">
-                <label>الساعة <span class="required">*</span></label>
+                <label>الساعة</label>
                 <div class="input-wrapper">
-                  <input type="time" id="reportTime" class="form-input" required>
+                  <input type="time" id="reportTime" class="form-input">
                   <span class="input-icon">⏰</span>
                 </div>
               </div>
