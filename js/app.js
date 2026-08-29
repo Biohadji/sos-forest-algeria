@@ -1192,6 +1192,8 @@ function loadAlerts() {
         badge.textContent = activeReports.length;
     }
 }
+
+function resolveReport(reportId) {
     var reports = getAllReports();
     var report = reports.find(function (r) { return r.id === reportId; });
     if (report) {
