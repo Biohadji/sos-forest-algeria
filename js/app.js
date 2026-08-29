@@ -929,7 +929,7 @@ function updateFiremapStats() {
     }
 }
 
-function getWilayaFromCoords(lat, lng) {
+function getWilayaFromCoordsOld(lat, lng) {
     var wilayasApprox = [
         { name: 'أدرار', lat: 27.87, lng: -0.29 },
         { name: 'الشلف', lat: 36.17, lng: 1.33 },
@@ -985,7 +985,7 @@ function getWilayaFromCoords(lat, lng) {
         { name: 'بني عباس', lat: 30.13, lng: 1.95 },
         { name: 'عين صلاح', lat: 26.23, lng: 0.17 },
         { name: 'تقرت', lat: 33.13, lng: 6.06 },
-        { name: 'جانت', lat: 24.55,_CID': 8.17 },
+        { name: 'جانت', lat: 24.55, lng: 8.17 },
         { name: 'المغير', lat: 32.18, lng: 3.69 },
         { name: 'المنيعة', lat: 32.10, lng: 5.41 }
     ];
@@ -1158,7 +1158,7 @@ function getWilayaFromCoords(lat, lng) {
         { code: '55', name: 'المنيعة', lat: 34.74, lng: 2.24, r: 1.2 },
         { code: '56', name: 'ورقلة', lat: 31.95, lng: 5.33, r: 2.5 },
         { code: '57', name: 'تيبازة', lat: 36.59, lng: 2.45, r: 0.6 },
-        { code: '58', name: 'ال.Read', lat: 36.75, lng: 3.06, r: 0.8 }
+        { code: '58', name: 'الجزائر الكبرى', lat: 36.75, lng: 3.06, r: 0.8 }
     ];
 
     var bestMatch = 'غير معروف';
