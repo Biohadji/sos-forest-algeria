@@ -68,6 +68,24 @@
         </div>
 
         <div class="form-group">
+          <label>رقم الهاتف (متصل بالواتساب) <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input type="tel" id="regPhone" class="form-input" placeholder="05XX XXX XXX" pattern="0[5-7]\d{8}" required>
+            <span class="input-icon">📱</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>الولاية <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <select id="regWilaya" class="form-select wilaya-select" required>
+              <option value="">-- اختر الولاية --</option>
+            </select>
+            <span class="input-icon">📍</span>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label>كلمة المرور <span class="required">*</span></label>
           <div class="input-wrapper">
             <input type="password" id="regPassword" class="form-input" placeholder="6 أحرف على الأقل" required minlength="6">
@@ -132,6 +150,11 @@
         </div>
       </div>
       <div class="topbar-left">
+        <div class="lang-selector" id="langSelector">
+          <button class="lang-btn active" onclick="changeLang('ar')" data-lang="ar">🇩🇿 عربي</button>
+          <button class="lang-btn" onclick="changeLang('fr')" data-lang="fr">🇫🇷 Français</button>
+          <button class="lang-btn" onclick="changeLang('en')" data-lang="en">🇬🇧 English</button>
+        </div>
         <div class="user-info">
           <div class="user-avatar" id="userAvatar">U</div>
           <div>
@@ -144,8 +167,8 @@
 
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="predictions">
-        <span class="tab-icon">🌤️</span>
-        <span>التوقعات والتنبؤات</span>
+        <span class="tab-icon">🔥</span>
+        <span>خريطة الحرائق</span>
       </button>
       <button class="nav-tab" data-section="reports">
         <span class="tab-icon">🚨</span>
@@ -155,6 +178,14 @@
       <button class="nav-tab" data-section="shelters">
         <span class="tab-icon">🏕️</span>
         <span>الإيواء والمؤونة</span>
+      </button>
+      <button class="nav-tab" data-section="solidarity">
+        <span class="tab-icon">🤲</span>
+        <span>التضامن والإغاثة</span>
+      </button>
+      <button class="nav-tab" data-section="ai-assistant">
+        <span class="tab-icon">🤖</span>
+        <span>المساعد الذكي</span>
       </button>
       <button class="nav-tab" data-section="admin">
         <span class="tab-icon">⚙️</span>
@@ -166,12 +197,11 @@
 
       <div class="section active" id="section-predictions">
         <div class="section-header">
-          <h2 class="section-title"><span class="icon">🌤️</span> التوقعات والتنبؤات</h2>
-          <p class="section-desc">مراقبة الأحوال الجوية والتنبؤ بمخاطر حرائق الغابات — <b style="color:#e74c3c;">المرجع الرسمي: خرائط NASA Worldview — الجزائر فقط (Algeria Only)</b> <span style="font-size:11px; color:var(--text-muted);">BBOX: -8.68,18.97,11.99,37.34 | VIIRS + EONET 9 فئات | 🇩🇿 DZ</span></p>
+          <h2 class="section-title"><span class="icon">🌤️</span> خريطة حرائق الجزائر</h2>
+          <p class="section-desc">مراقبة حرائق الغابات في الجزائر بالوقت الحقيقي — <b style="color:#e74c3c;">المصدر: FireMap.live (NASA FIRMS)</b> <span style="font-size:11px; color:var(--text-muted);">BBOX: -8.68,18.97,11.99,37.34 | 🇩🇿 Algeria Only</span></p>
           <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
             <span style="font-size:11px; color:var(--text-muted); background:rgba(16,185,129,0.08); padding:6px 10px; border-radius:8px; border:1px solid rgba(16,185,129,0.25);">🇩🇿 Algeria Only</span>
-            <span style="font-size:11px; color:var(--text-muted); background:rgba(231,76,60,0.08); padding:6px 10px; border-radius:8px; border:1px solid rgba(231,76,60,0.15);">🛰️ المرجع: worldview.earthdata.nasa.gov</span>
-            <span id="worldviewLastUpdate" style="font-size:11px; color:var(--text-muted);">آخر تحيين: --</span>
+            <span style="font-size:11px; color:var(--text-muted); background:rgba(231,76,60,0.08); padding:6px 10px; border-radius:8px; border:1px solid rgba(231,76,60,0.15);">🔥 المصدر: firemap.live</span>
           </div>
         </div>
 
@@ -224,17 +254,17 @@
 
         <div class="stats-grid" style="margin-bottom:24px;">
           <div class="stat-card red">
-            <div class="stat-icon red">🛰️</div>
+            <div class="stat-icon red">🔥</div>
             <div class="stat-value" id="firmsCount">0</div>
-            <div class="stat-label">نقاط FIRMS المكتشفة</div>
+            <div class="stat-label">نقاط الحرائق</div>
           </div>
           <div class="stat-card red">
-            <div class="stat-icon red">🔥</div>
+            <div class="stat-icon red">🔴</div>
             <div class="stat-value" id="firmsHigh">0</div>
-            <div class="stat-label">حرائق عالية السطوع</div>
+            <div class="stat-label">حرائق عالية النشاط</div>
           </div>
           <div class="stat-card orange">
-            <div class="stat-icon orange">🔶</div>
+            <div class="stat-icon orange">🟠</div>
             <div class="stat-value" id="firmsMedium">0</div>
             <div class="stat-label">حرائق متوسطة</div>
           </div>
@@ -246,93 +276,73 @@
         </div>
 
         <div class="card" style="margin-bottom:24px;">
-          <div class="card-header" style="flex-wrap:wrap; gap:8px;">
-            <h3 class="card-title">🗺️ خريطة التوقعات <span style="font-size:11px; font-weight:600; color:#059669; background:rgba(16,185,129,0.1); padding:3px 8px; border-radius:20px; border:1px solid rgba(16,185,129,0.2);">🇩🇿 Algeria Only</span> <span style="font-size:11px; font-weight:600; color:#e74c3c; background:rgba(231,76,60,0.1); padding:3px 8px; border-radius:20px; border:1px solid rgba(231,76,60,0.2);">مرجع Worldview</span></h3>
-            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-              <span id="worldviewLastUpdate" style="font-size:10px; color:var(--text-muted);">آخر تحيين: --</span>
-              <button id="worldviewRefreshBtn" onclick="refreshPredictionsFromWorldview()" class="btn btn-sm btn-primary" style="font-size:12px; font-weight:700; background:#059669; border-color:#059669; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
-                <span>🔄</span> تحيين البيانات من NASA Worldview
-              </button>
-              <a id="worldviewOpenBtn" href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=dustHaze,manmade,seaLakeIce,severeStorms,snow,volcanoes,waterColor,floods,wildfires&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),VIIRS_NOAA20_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true&t=2026-08-28-T15%3A25%3A32Z" target="_blank" class="btn btn-sm btn-outline" style="font-size:12px;">
-                <span>🌍</span> فتح Worldview (Algeria)
-              </a>
-            </div>
+          <div class="card-header">
+            <h3 class="card-title">🌍 مواقع رصد الحرائق العالمية (الأكثر دقة)</h3>
           </div>
           <div class="card-body">
-            <div class="map-container" id="predictionsMap"></div>
-            <div class="heatmap-legend">
-              <span class="legend-title">مستوى الخطر:</span>
-              <div style="flex:1;">
-                <div class="legend-scale"></div>
-                <div class="legend-labels">
-                  <span>آمن</span>
-                  <span>منخفض</span>
-                  <span>متوسط</span>
-                  <span>مرتفع</span>
-                  <span>حرج</span>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+              <a href="https://firms.modaps.eosdis.nasa.gov/map/#d:24hrs;@28.03,1.65,5z" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,0,0,0.3);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 15px rgba(255,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="width:45px;height:45px;background:rgba(255,0,0,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">🛰️</div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#ff4444;">NASA FIRMS</div>
+                  <div style="font-size:10px;color:#999;">الأكثر دقة عالمياً</div>
                 </div>
-              </div>
+              </a>
+
+              <a href="https://www.firemap.live/?lat=28.03&lng=1.65&zoom=5" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,100,0,0.3);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 15px rgba(255,100,0,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="width:45px;height:45px;background:rgba(255,100,0,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">🔥</div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#ff6400;">FireMap.live</div>
+                  <div style="font-size:10px;color:#999;">تفاعلي وسهل الاستخدام</div>
+                </div>
+              </a>
+
+              <a href="https://effis.jrc.ec.europa.eu/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,200,100,0.3);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 15px rgba(0,200,100,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="width:45px;height:45px;background:rgba(0,200,100,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">🇪🇺</div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#00c864;">EFFIS</div>
+                  <div style="font-size:10px;color:#999;">نظام أوروبي</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header" style="flex-wrap:wrap; gap:8px;">
+            <h3 class="card-title">🔥 خريطة حرائق الجزائر <span style="font-size:11px; font-weight:600; color:#e74c3c; background:rgba(231,76,60,0.1); padding:3px 8px; border-radius:20px; border:1px solid rgba(231,76,60,0.2);">🔥 FireMap.live</span></h3>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <button id="firemapRefreshBtn" onclick="refreshFiremapData()" class="btn btn-sm btn-primary" style="font-size:12px; font-weight:700; background:#e74c3c; border-color:#e74c3c; box-shadow:0 2px 8px rgba(231,76,60,0.3);">
+                <span>🔄</span> تحيين البيانات
+              </button>
+              <a href="https://www.firemap.live/?lat=28.03&lng=1.65&zoom=5" target="_blank" class="btn btn-sm btn-outline" style="font-size:12px;">
+                <span>🌍</span> فتح في نافذة جديدة
+              </a>
+            </div>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div style="position:relative;width:100%;padding-bottom:75%;height:0;overflow:hidden;border-radius:0 0 12px 12px;">
+              <iframe 
+                id="firemapIframe"
+                src="https://www.firemap.live/?lat=28.03&lng=1.65&zoom=5" 
+                style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:0 0 12px 12px;" 
+                allowfullscreen
+                loading="lazy"
+                title="خريطة حرائق الجزائر - FireMap.live">
+              </iframe>
             </div>
           </div>
         </div>
 
         <div class="card" style="margin-bottom:24px;">
           <div class="card-header">
-            <h3 class="card-title">🛰️ بيانات الأقمار الصناعية - NASA Worldview <span style="font-size:11px; color:#059669; background:rgba(16,185,129,0.1); padding:3px 8px; border-radius:20px; border:1px solid rgba(16,185,129,0.2);">🇩🇿 Algeria Only</span></h3>
-            <span style="font-size:11px; color:var(--text-muted);">BBOX: -8.68,18.97,11.99,37.34 | 2026-04-30 → 2026-08-28 | الجزائر فقط</span>
-          </div>
-          <div class="card-body">
-            <iframe id="nasaWorldview" src="https://worldview.earthdata.nasa.gov/embed?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=dustHaze,manmade,seaLakeIce,severeStorms,snow,volcanoes,waterColor,floods,wildfires&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),VIIRS_NOAA20_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true&t=2026-08-28-T15%3A25%3A32Z" width="100%" height="450" style="border:none; border-radius:12px; background:#000;" allowfullscreen loading="lazy"></iframe>
-            <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
-              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=dustHaze,manmade,seaLakeIce,severeStorms,snow,volcanoes,waterColor,floods,wildfires&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),VIIRS_NOAA20_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true&t=2026-08-28-T15%3A25%3A32Z" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
-                🔥 FIRMS حرائق الجزائر + 9 فئات
-              </a>
-              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=severeStorms&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
-                🌪️ عواصف الجزائر
-              </a>
-              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=floods&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
-                🌊 فيضانات الجزائر
-              </a>
-              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=dustHaze&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
-                🌫️ غبار الجزائر
-              </a>
-              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=snow,seaLakeIce&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
-                ❄️ ثلوج الجزائر
-              </a>
-              <a href="https://worldview.earthdata.nasa.gov/?v=-8.68,18.97,11.99,37.34&e=true&efs=true&efa=false&efd=2026-04-30,2026-08-28&efc=volcanoes&l=VIIRS_SNPP_Thermal_Anomalies_375m_All(hidden),BlueMarble_NextGeneration&lg=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:11px;">
-                🌋 براكين
-              </a>
-            </div>
-            <div id="eonetEventsList" style="margin-top:16px;"></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-bottom:24px;">
-          <div class="card-header">
-            <h3 class="card-title">📊 نقاط الخطر على الخريطة</h3>
-            <button onclick="transferWorldviewPointsToDangerData()" class="btn btn-sm btn-primary" style="font-size:11px;">
-              🛰️ نقل من Worldview
-            </button>
+            <h3 class="card-title">🔥 قائمة الحرائق النشطة في الجزائر من FireMap.live</h3>
           </div>
           <div class="card-body">
             <div class="alerts-list" id="heatmapPoints">
               <div style="text-align:center; padding:40px; color:var(--text-muted);">
                 <div class="spinner"></div>
-                <p style="margin-top:12px;">جاري تحليل بيانات الأحوال الجوية من NASA...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">📋 جدول المواقع القابلة للاشتعال</h3>
-          </div>
-          <div class="card-body">
-            <div id="dangerTableContainer">
-              <div style="text-align:center; padding:40px; color:var(--text-muted);">
-                <div class="spinner"></div>
-                <p style="margin-top:12px;">جاري تحميل بيانات المواقع...</p>
+                <p style="margin-top:12px;">جاري تحميل بيانات الحرائق النشطة من FireMap.live...</p>
               </div>
             </div>
           </div>
@@ -518,6 +528,189 @@
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="section-solidarity">
+        <div class="section-header">
+          <h2 class="section-title"><span class="icon">🤲</span> التضامن والإغاثة</h2>
+          <p class="section-desc">الجمعيات الخيرية والمؤسسات والمنظمات التي تنظم عمليات التضامن وجمع التبرعات</p>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <h3 class="card-title">📝 نشر حملة تضامن</h3>
+          </div>
+          <div class="card-body">
+            <form id="solidarityForm" class="report-form">
+              <div class="form-group">
+                <label>اسم الجمعية / المؤسسة <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="text" id="solidarityOrgName" class="form-input" placeholder="مثال: جمعية الإغاثة الإنسانية" required>
+                  <span class="input-icon">🏢</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>نوع الحملة <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <select id="solidarityType" class="form-select" required>
+                    <option value="">-- اختر نوع الحملة --</option>
+                    <option value="donation">💰 جمع التبرعات</option>
+                    <option value="relief">📦 عمليات الإغاثة</option>
+                    <option value="solidarity">🤲 حملات التضامن</option>
+                    <option value="medical">🏥 مساعدة طبية</option>
+                    <option value="shelter">🏕️ إيواء المتضررين</option>
+                    <option value="food">🍎 توزيع الغذاء</option>
+                    <option value="other">📋 أخرى</option>
+                  </select>
+                  <span class="input-icon">📋</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>الولاية <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <select id="solidarityWilaya" class="form-select wilaya-select" required>
+                    <option value="">-- اختر الولاية --</option>
+                  </select>
+                  <span class="input-icon">📍</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>وصف الحملة <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <textarea id="solidarityDescription" class="form-input" rows="3" placeholder="وصف مختصر للحملة والهدف منها..." required></textarea>
+                  <span class="input-icon">📝</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>رقم الهاتف <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="tel" id="solidarityPhone" class="form-input" placeholder="05XX XXX XXX" pattern="0[5-7]\d{8}" required>
+                  <span class="input-icon">📞</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>رقم الواتساب</label>
+                <div class="input-wrapper">
+                  <input type="tel" id="solidarityWhatsApp" class="form-input" placeholder="رقم الواتساب (اختياري)" pattern="0[5-7]\d{8}">
+                  <span class="input-icon">💬</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>رابط صفحة الفيسبوك</label>
+                <div class="input-wrapper">
+                  <input type="url" id="solidarityFacebook" class="form-input" placeholder="https://facebook.com/...">
+                  <span class="input-icon">📘</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>تاريخ البداية <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <input type="date" id="solidarityStartDate" class="form-input" required>
+                  <span class="input-icon">📅</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>تاريخ النهاية</label>
+                <div class="input-wrapper">
+                  <input type="date" id="solidarityEndDate" class="form-input">
+                  <span class="input-icon">📅</span>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label>صورة الحملة</label>
+                <div class="image-upload">
+                  <input type="file" id="solidarityImage" accept="image/*" capture="environment">
+                  <div class="upload-icon">📷</div>
+                  <div class="upload-text" id="solidarityUploadText">اضغط لتحميل صورة الحملة</div>
+                  <div class="upload-hint">يمكنك التقاط صورة بالكاميرا أو اختيار من المعرض</div>
+                </div>
+                <img id="solidarityImagePreview" class="image-preview" alt="معاينة الصورة">
+              </div>
+
+              <div class="form-group full-width">
+                <button type="submit" class="btn btn-success">
+                  <span>📤</span>
+                  <span>نشر الحملة</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <h3 class="card-title">🤝 حملات التضامن النشطة</h3>
+          </div>
+          <div class="card-body">
+            <div class="alerts-list" id="solidarityList">
+              <div style="text-align:center;padding:40px;color:var(--text-muted);">
+                <div style="font-size:48px;margin-bottom:12px;">🤲</div>
+                <p>لا توجد حملات نشطة حالياً</p>
+                <p style="font-size:12px;margin-top:8px;">كن أول من ينشر حملة تضامن</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="section-ai-assistant">
+        <div class="section-header">
+          <h2 class="section-title"><span class="icon">🤖</span> المساعد الذكي</h2>
+          <p class="section-desc">مساعد بالذكاء الاصطناعي للإجابة على أسئلتك حول الحرائق في الجزائر</p>
+        </div>
+
+        <div class="card" style="margin-bottom:0;height:calc(100vh - 220px);min-height:500px;display:flex;flex-direction:column;">
+          <div class="card-header" style="border-bottom:1px solid var(--border-color);flex-shrink:0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:40px;height:40px;background:linear-gradient(135deg,#00c853,#1a2a3a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid #00c853;">🤖</div>
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--text-primary);">مساعد SOS FOREST ALGERIA</div>
+                <div style="font-size:11px;color:#00c853;">● متصل الآن</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="aiChatMessages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <div style="width:32px;height:32px;background:linear-gradient(135deg,#00c853,#1a2a3a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🤖</div>
+              <div style="max-width:80%;padding:12px 16px;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.2);border-radius:12px;border-top-right-radius:4px;">
+                <div style="font-size:13px;line-height:1.8;color:var(--text-primary);">
+                  مرحباً! أنا مساعدك الذكي في تطبيق <b style="color:#e74c3c;">SOS FOREST ALGERIA</b> 🇩🇿<br><br>
+                  يمكنني مساعدتك في:<br>
+                  🔥 معلومات عن الحرائق في الجزائر<br>
+                  🗺️ المناطق المتضررة والطرق المقطوعة<br>
+                  📞 أرقام الطوارئ والتواصل مع أجهزة الدولة<br>
+                  🏕️ مراكز الإيواء والمؤونة<br>
+                  🤲 الجمعيات والمنظمات والحملات<br>
+                  💡 نصائح السلامة من الحرائق<br><br>
+                  <b>اسألني أي سؤال وسأحاول مساعدتك!</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:12px 16px;border-top:1px solid var(--border-color);flex-shrink:0;">
+            <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+              <button onclick="aiQuickQuestion('ما هي أرقام الطوارئ في الجزائر؟')" style="padding:6px 12px;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.2);border-radius:20px;font-size:11px;color:#e74c3c;cursor:pointer;font-family:Cairo;">📞 أرقام الطوارئ</button>
+              <button onclick="aiQuickQuestion('كيف أبلّغ عن حريق؟')" style="padding:6px 12px;background:rgba(255,152,0,0.1);border:1px solid rgba(255,152,0,0.2);border-radius:20px;font-size:11px;color:#ff9800;cursor:pointer;font-family:Cairo;">🔥 التبليغ عن حريق</button>
+              <button onclick="aiQuickQuestion('ما هي نصائح السلامة من الحرائق؟')" style="padding:6px 12px;background:rgba(0,150,255,0.1);border:1px solid rgba(0,150,255,0.2);border-radius:20px;font-size:11px;color:#0096ff;cursor:pointer;font-family:Cairo;">💡 نصائح السلامة</button>
+              <button onclick="aiQuickQuestion('كيف أساعد المتضررين؟')" style="padding:6px 12px;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.2);border-radius:20px;font-size:11px;color:#00c853;cursor:pointer;font-family:Cairo;">🤲 المساهمة</button>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="aiChatInput" class="form-input" placeholder="اكتب سؤالك هنا..." style="flex:1;border-radius:24px;padding:12px 16px;" onkeypress="if(event.key==='Enter')sendAiMessage()">
+              <button onclick="sendAiMessage()" style="padding:12px 20px;background:linear-gradient(135deg,#00c853,#00a844);color:white;border:none;border-radius:24px;cursor:pointer;font-family:Cairo;font-weight:700;font-size:13px;">إرسال</button>
+            </div>
           </div>
         </div>
       </div>
