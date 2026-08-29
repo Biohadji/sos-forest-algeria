@@ -901,14 +901,6 @@
       document.body.classList.add('pwa-standalone');
     }
 
-    // Prevent pull-to-refresh on mobile
-    document.body.addEventListener('touchmove', function(e) {
-      if (e.target.closest('.fire-iframe-container, .chat-messages')) return;
-      if (window.scrollY === 0 && e.touches[0].clientY > 0) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-
     populateWilayaDropdowns();
     var rd = document.getElementById('reportDate');
     var rt = document.getElementById('reportTime');
