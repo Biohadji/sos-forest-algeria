@@ -115,7 +115,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     checkConfirmation();
     initApp();
+    initPWAInstall();
 });
+
+/* ============================================================
+   PWA INSTALL
+   ============================================================ */
+var deferredPrompt = null;
+
+function initPWAInstall() {
+    var installBtn = document.getElementById('installBtn');
+    var installBtnLogin = document.getElementById('installBtnLogin');
+    window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (installBtn) installBtn.style.display = 'inline-flex';
+        if (installBtnLogin) installBtnLogin.style.display = 'block';
+    });
+    window.addEventListener('appinstalled', function () {
+        deferredPrompt = null;
+        if (installBtn) installBtn.style.display = 'none';
+        if (installBtnLogin) installBtnLogin.style.display = 'none';
+        showToast('تم تثبيت التطبيق بنجاح!', 'success');
+    });
+}
+
+function installPWA() {
+    if (!deferredPrompt) {
+        showToast('يمكنك التثبيت من قائمة المتصفح', 'info');
+        return;
+    }
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function (result) {
+        if (result.outcome === 'accepted') {
+            showToast('جاري تثبيت التطبيق...', 'info');
+        }
+        deferredPrompt = null;
+        var installBtn = document.getElementById('installBtn');
+        if (installBtn) installBtn.style.display = 'none';
+    });
+}
 
 function checkConfirmation() {
     var params = new URLSearchParams(window.location.search);

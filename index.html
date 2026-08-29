@@ -35,6 +35,9 @@
         <div class="sos-icon">🔥</div>
         <h1 class="sos-title">SOS FOREST ALGERIA</h1>
         <p class="sos-subtitle">نظام مراقبة ومنع حرائق الغابات في الجزائر</p>
+        <button class="btn-install-login" id="installBtnLogin" onclick="installPWA()" style="display:none">
+          <i class="fas fa-mobile-alt"></i> تثبيت التطبيق على الهاتف
+        </button>
       </div>
 
       <!-- نموذج تسجيل الدخول -->
@@ -164,6 +167,10 @@
           <button class="lang-btn" onclick="changeLang('fr')" data-lang="fr">🇫🇷 Français</button>
           <button class="lang-btn" onclick="changeLang('en')" data-lang="en">🇬🇧 English</button>
         </div>
+        <button class="btn-install" id="installBtn" onclick="installPWA()" style="display:none">
+          <i class="fas fa-download"></i>
+          <span>تثبيت</span>
+        </button>
         <div class="user-info">
           <div class="user-avatar" id="userAvatar">U</div>
           <div>
