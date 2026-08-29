@@ -156,6 +156,9 @@
   <div class="dashboard" id="dashboard">
     <div class="topbar">
       <div class="topbar-right">
+        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+          <span></span><span></span><span></span>
+        </button>
         <div class="topbar-brand">
           <div class="topbar-brand-icon">🔥</div>
           <div class="topbar-brand-text">SOS <span>FOREST</span> ALGERIA</div>
@@ -178,6 +181,46 @@
           </div>
         </div>
         <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+      </div>
+    </div>
+
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-header">
+        <div class="topbar-brand">
+          <div class="topbar-brand-icon">🔥</div>
+          <div class="topbar-brand-text">SOS <span>FOREST</span> ALGERIA</div>
+        </div>
+        <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
+      </div>
+      <div class="mobile-menu-items">
+        <button class="mobile-menu-item active" data-section="predictions" onclick="mobileMenuNavigate('predictions')">
+          <span class="menu-icon">🔥</span>
+          <span>خريطة الحرائق</span>
+        </button>
+        <button class="mobile-menu-item" data-section="reports" onclick="mobileMenuNavigate('reports')">
+          <span class="menu-icon">🚨</span>
+          <span>التبليغات عن الحرائق</span>
+        </button>
+        <button class="mobile-menu-item" data-section="shelters" onclick="mobileMenuNavigate('shelters')">
+          <span class="menu-icon">🏕️</span>
+          <span>الإيواء والمؤونة</span>
+        </button>
+        <button class="mobile-menu-item" data-section="solidarity" onclick="mobileMenuNavigate('solidarity')">
+          <span class="menu-icon">🤲</span>
+          <span>التضامن والإغاثة</span>
+        </button>
+        <button class="mobile-menu-item" data-section="ai-assistant" onclick="mobileMenuNavigate('ai-assistant')">
+          <span class="menu-icon">🤖</span>
+          <span>المساعد الذكي</span>
+        </button>
+        <button class="mobile-menu-item" data-section="admin" onclick="mobileMenuNavigate('admin')">
+          <span class="menu-icon">⚙️</span>
+          <span>لوحة التحكم</span>
+        </button>
+      </div>
+      <div class="mobile-menu-footer">
+        <button class="mobile-menu-logout" onclick="toggleMobileMenu(); logout();">🚪 خروج</button>
       </div>
     </div>
 
@@ -863,7 +906,7 @@
       <div class="modal-body" id="pointModalBody"></div>
       <div class="modal-footer">
         <button class="btn btn-info btn-sm" id="pointItineraryBtn" target="_blank">
-          <span>🗺️</span> فتح المسار Itinéraire
+          <span>🗺️</span> فتح المسار
         </button>
         <button class="btn btn-outline btn-sm" onclick="closePointModal()">إغلاق</button>
       </div>

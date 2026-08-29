@@ -579,6 +579,7 @@ function switchSection(section) {
         return;
     }
     currentSection = section;
+    updateMobileMenuActive();
     var tabs = document.querySelectorAll('.nav-tab');
     tabs.forEach(function (tab) {
         tab.classList.remove('active');
@@ -646,6 +647,49 @@ function setupAdminAccess() {
             adminTab.style.display = 'none';
         }
     }
+    var adminMobileItem = document.querySelector('.mobile-menu-item[data-section="admin"]');
+    if (adminMobileItem) {
+        adminMobileItem.style.display = isAdmin() ? 'flex' : 'none';
+    }
+}
+
+/* ============================================================
+    3b. MOBILE HAMBURGER MENU
+    ============================================================ */
+
+function toggleMobileMenu() {
+    var menu = document.getElementById('mobileMenu');
+    var overlay = document.getElementById('mobileMenuOverlay');
+    var hamburger = document.getElementById('hamburgerBtn');
+    var isOpen = menu && menu.classList.contains('active');
+
+    if (isOpen) {
+        if (menu) menu.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+        if (hamburger) hamburger.classList.remove('active');
+        document.body.style.overflow = '';
+    } else {
+        updateMobileMenuActive();
+        if (menu) menu.classList.add('active');
+        if (overlay) overlay.classList.add('active');
+        if (hamburger) hamburger.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function mobileMenuNavigate(section) {
+    switchSection(section);
+    toggleMobileMenu();
+}
+
+function updateMobileMenuActive() {
+    var items = document.querySelectorAll('.mobile-menu-item');
+    items.forEach(function (item) {
+        item.classList.remove('active');
+        if (item.getAttribute('data-section') === currentSection) {
+            item.classList.add('active');
+        }
+    });
 }
 
 /* ============================================================
@@ -772,7 +816,7 @@ function generateSimulatedFiremapData() {
         { lat: 33.80, lng: 2.87, name: 'الأغواط', frp: 12.3, brightness: 296, size: 200, confidence: 55, sat: 'MODIS' },
         { lat: 34.85, lng: 5.73, name: 'بسكرة', frp: 33.7, brightness: 311, size: 900, confidence: 79, sat: 'VIIRS' },
         { lat: 35.56, lng: 6.17, name: 'باتنة', frp: 41.2, brightness: 314, size: 1300, confidence: 86, sat: 'VIIRS' },
-        { lat: 36.27, lng: 2.75, name: 'المدية北部', frp: 16.5, brightness: 300, size: 350, confidence: 62, sat: 'MODIS' },
+        { lat: 36.27, lng: 2.75, name: 'المدية الشمالية', frp: 16.5, brightness: 300, size: 350, confidence: 62, sat: 'MODIS' },
         { lat: 36.59, lng: 2.45, name: 'تيبازة', frp: 20.1, brightness: 304, size: 480, confidence: 69, sat: 'MODIS' }
     ];
 
@@ -1675,16 +1719,16 @@ function getAiResponse(question) {
             '🚗 أبعد سياراتك ومنزلك عن منطقة الخطر<br>' +
             '💨 تجنب مناطق الدخان الكثيف<br>' +
             '👁️ أبلغ عن أي حريق تراه فوراً<br>' +
-            '🏠 إذا كنت في مبنى远离 عن النوافذ<br>' +
+            '🏠 إذا كنت في مبنى ابتعد عن النوافذ<br>' +
             '🚗 إذا كنت في سيارة: أغلق النوافذ، فعّل التكييف على الدوار، اقطع الطريق بسرعة<br>' +
             '📱 شحن هاتفك دائماً في حالة الطوارئ<br>' +
-            '🎒 حضّر حقيبة طوارئ (文档، أدوية، ماء، طعام)';
+            '🎒 حضّر حقيبة طوارئ (وثائق، أدوية، ماء، طعام)';
     }
 
     if (q.includes('تبرع') || q.includes('don') || q.includes('donner') || q.includes('donate') || q.includes('volunteer') || q.includes('تطوع') || q.includes('مساعدة')) {
         var solidarityCount = posts.length;
         return '❤️ <strong>التضامن والمساعدة:</strong><br><br>' +
-            '共有 <strong>' + solidarityCount + '</strong> منشور تضامن متاح في التطبيق.<br><br>' +
+            'يوجد <strong>' + solidarityCount + '</strong> منشور تضامن متاح في التطبيق.<br><br>' +
             '🤝 <strong>كيف تساعد:</strong><br>' +
             '• نشر منشور تضامن من قسم "التضامن"<br>' +
             '• التبرع للمؤسسات المعتمدة عبر الأرقام الرسمية<br>' +
@@ -1702,12 +1746,12 @@ function getAiResponse(question) {
             '• الجمعية الوطنية لحماية الغابات<br>' +
             '• جمعية حماية البيئة<br><br>' +
             '📞 يمكنك التواصل معهم عبر أرقام الطوارئ أو زيارة مقراتهم المحلية.<br>' +
-            '💡 تواصل مع authorities المحلية في ولايتك.';
+            '💡 تواصل مع الجهات المحلية في ولايتك.';
     }
 
     if (q.includes('طريق') || q.includes('إغلاق') || q.includes('route') || q.includes('fermée') || q.includes('طريق') || q.includes('infrastructure')) {
         var activeReports = reports.filter(function (r) { return r.status === 'active'; }).length;
-        return '🚧 <strong>معلومات الطرق وال ♐️基础设施:</strong><br><br>' +
+        return '🚧 <strong>معلومات الطرق والبنية التحتية:</strong><br><br>' +
             'عدد البلاغات النشطة: <strong>' + activeReports + '</strong><br><br>' +
             '🛣️ <strong>للحصول على معلومات محدثة عن الطرق:</strong><br>' +
             '• اتصل بمركز المعلومات: <strong>1055</strong><br>' +
@@ -1751,7 +1795,7 @@ function getAiResponse(question) {
             '• 🌐 دعم متعدد اللغات (عربي، فرنسي، إنجليزي)<br>' +
             '• 📊 إحصائيات وبيانات مباشرة<br>' +
             '• 🗺️ خرائط تفاعلية<br><br>' +
-            '📱 يعمل كتطبيق ويب ت Progressive (PWA)';
+            '📱 يعمل كتطبيق ويب تقدمي (PWA)';
     }
 
     if (q.includes('مساعد') || q.includes('assistant') || q.includes('bot') || q.includes('آلي') || q.includes('من أنت') || q.includes('who are you')) {
@@ -1762,7 +1806,7 @@ function getAiResponse(question) {
             '🛡️ نصائح السلامة والحماية<br>' +
             '❤️ التبرع والتطوع والمساعدة<br>' +
             '🏛️ الجمعيات والمؤسسات المتخصصة<br>' +
-            '🚧 معلومات الطرق وال ♐️基础设施<br>' +
+            '🚧 معلومات الطرق والبنية التحتية<br>' +
             '📍 المناطق المتضررة والحرائق النشطة<br>' +
             '🏠 مراكز الإيواء والحماية<br>' +
             'ℹ️ معلومات عن التطبيق<br><br>' +
@@ -1786,7 +1830,7 @@ function getAiResponse(question) {
             '💡 الطقس الجاف والحرارة العالية تزيد خطر حرائق الغابات.';
     }
 
-    if (q.includes('统计') || q.includes('إحصائيات') || q.includes('stat') || q.includes('stats') || q.includes('عدد')) {
+    if (q.includes('إحصائيات') || q.includes('stat') || q.includes('stats') || q.includes('عدد')) {
         return '📊 <strong>إحصائيات التطبيق:</strong><br><br>' +
             '🔥 حرائق نشطة: <strong>' + activeFires + '</strong><br>' +
             '📋 بلاغات مسجلة: <strong>' + reports.length + '</strong><br>' +
@@ -1804,7 +1848,7 @@ function getAiResponse(question) {
         '• 🛡️ نصائح السلامة والحماية<br>' +
         '• ❤️ التبرع والتطوع<br>' +
         '• 🏛️ الجمعيات والمؤسسات<br>' +
-        '• 🚧 الطرق المغلقة وال ♐️基础设施<br>' +
+        '• 🚧 الطرق المغلقة والبنية التحتية<br>' +
         '• 📍 المناطق المتضررة<br>' +
         '• 🏠 مراكز الإيواء<br>' +
         '• 🌤️ معلومات الطقس<br>' +
@@ -1981,26 +2025,29 @@ var currentLang = localStorage.getItem('sosForestLang') || 'ar';
 var translations = {
     ar: {
         navPredictions: '🔥 خريطة الحرائق',
-        navReports: '📋 البلاغات',
-        navShelters: '🏠 المأوى',
-        navSolidarity: '❤️ التضامن',
-        navAdmin: '⚙️ الإدارة',
-        sectionPredictionsTitle: '🔥 خريطة الحرائق',
-        sectionPredictionsDescription: 'مراقبة حرائق الغابات في الوقت الحقيقي - بيانات مباشرة من الأقمار الصناعية',
-        sectionReportsTitle: '📋 البلاغات',
-        sectionReportsDescription: 'الإبلاغ عن حرائق الغابات والمساعدة في حماية غاباتنا',
-        sectionSheltersTitle: '🏠 مراكز الإيواء',
-        sectionSheltersDescription: 'البحث عن مراكز الإيواء وتسجيل مراكز جديدة',
-        sectionSolidarityTitle: '❤️ التضامن',
-        sectionSolidarityDescription: 'منشورات التضامن والمساعدة والتطوع',
-        sectionAdminTitle: '⚙️ لوحة الإدارة',
-        sectionAdminDescription: 'إدارة التطبيق والمحتوى والإحصائيات',
-        btnRefresh: '🔄 تحديث البيانات',
-        btnGps: '📍 تحديد الموقع',
+        navReports: '🚨 التبليغات',
+        navShelters: '🏕️ الإيواء',
+        navSolidarity: '🤲 التضامن',
+        navAiAssistant: '🤖 المساعد',
+        navAdmin: '⚙️ التحكم',
+        sectionPredictionsTitle: '🔥 خريطة حرائق الجزائر',
+        sectionPredictionsDescription: 'مراقبة حرائق الغابات في الجزائر بالوقت الحقيقي — بيانات مباشرة من الأقمار الصناعية',
+        sectionReportsTitle: '🚨 التبليغات عن الحرائق',
+        sectionReportsDescription: 'إرسال تبليغات فورية عن حرائق الغابات إلى المصالح المعنية',
+        sectionSheltersTitle: '🏕️ الإيواء والمؤونة',
+        sectionSheltersDescription: 'تحديد أماكن الإيواء والمؤونة لمساعدة العائلات المنكوبة',
+        sectionSolidarityTitle: '🤲 التضامن والإغاثة',
+        sectionSolidarityDescription: 'الجمعيات الخيرية والمؤسسات والمنظمات التي تنظم عمليات التضامن وجمع التبرعات',
+        sectionAiAssistantTitle: '🤖 المساعد الذكي',
+        sectionAiAssistantDescription: 'مساعد بالذكاء الاصطناعي للإجابة على أسئلتك حول الحرائق في الجزائر',
+        sectionAdminTitle: '⚙️ لوحة التحكم',
+        sectionAdminDescription: 'مراقبة وإدارة جميع التبليغات ومراكز الإيواء',
+        btnRefresh: '🔄 تحيين البيانات',
+        btnGps: '📍 تحديد موقعي GPS',
         btnSend: 'إرسال',
-        btnLogin: 'تسجيل الدخول',
+        btnLogin: 'دخول التطبيق',
         btnRegister: 'حساب جديد',
-        btnLogout: 'تسجيل الخروج',
+        btnLogout: 'خروج',
         loginTitle: 'تسجيل الدخول',
         registerTitle: 'حساب جديد',
         loginEmail: 'البريد الإلكتروني',
@@ -2012,17 +2059,17 @@ var translations = {
         registerPasswordConfirm: 'تأكيد كلمة المرور',
         aiPlaceholder: 'اكتب سؤالك هنا...',
         aiSend: 'إرسال',
-        quickEmergency: '🚨 أرقام الطوارئ',
-        quickReport: '📋 كيف أُبلّغ؟',
-        quickSafety: '🛡️ نصائح السلامة',
-        quickDonate: '❤️ تبرع وتطوع',
+        quickEmergency: '📞 أرقام الطوارئ',
+        quickReport: '🔥 التبليغ عن حريق',
+        quickSafety: '💡 نصائح السلامة',
+        quickDonate: '🤲 المساهمة',
         quickShelter: '🏠 مراكز الإيواء',
         quickFires: '🔥 الحرائق النشطة',
         weatherTitle: 'الطقس الحالي',
         fireStatsTitle: 'إحصائيات الحرائق',
         firemapPointsTitle: 'النقاط النشطة',
         firemapIframeTitle: 'خريطة الحرائق التفاعلية',
-        reportFormTitle: 'نموذج البلاغ',
+        reportFormTitle: 'نموذج التبليغ',
         reportPhone: 'رقم الهاتف',
         reportWilaya: 'الولاية',
         reportMunicipality: 'البلدية',
@@ -2031,52 +2078,55 @@ var translations = {
         reportLng: 'خط الطول',
         reportDate: 'التاريخ',
         reportTime: 'الوقت',
-        reportImage: 'صورة (اختياري)',
-        reportSubmit: 'إرسال البلاغ',
-        shelterFormTitle: 'تسجيل مأوى',
-        shelterName: 'اسم المأوى',
+        reportImage: 'صورة الموقع',
+        reportSubmit: 'إرسال التبليغ',
+        shelterFormTitle: 'تسجيل مركز الإيواء',
+        shelterName: 'اسم المركز',
         shelterWilaya: 'الولاية',
         shelterMunicipality: 'البلدية',
-        shelterPhone: 'رقم الهاتف',
+        shelterPhone: 'رقم هاتف المركز',
         shelterLat: 'خط العرض',
         shelterLng: 'خط الطول',
-        shelterImage: 'صورة (اختياري)',
-        shelterSubmit: 'تسجيل المأوى',
-        solidarityFormTitle: 'نشر منشور تضامن',
-        solidarityOrgName: 'اسم الجمعية / المنظمة',
-        solidarityType: 'نوع المنشور',
+        shelterImage: 'صورة المركز',
+        shelterSubmit: 'تسجيل المركز',
+        solidarityFormTitle: 'نشر حملة تضامن',
+        solidarityOrgName: 'اسم الجمعية / المؤسسة',
+        solidarityType: 'نوع الحملة',
         solidarityWilaya: 'الولاية',
-        solidarityDescription: 'الوصف',
+        solidarityDescription: 'وصف الحملة',
         solidarityPhone: 'رقم الهاتف',
-        solidarityWhatsApp: 'رقم WhatsApp',
-        solidarityFacebook: 'رابط Facebook',
+        solidarityWhatsApp: 'رقم الواتساب',
+        solidarityFacebook: 'رابط صفحة الفيسبوك',
         solidarityStartDate: 'تاريخ البداية',
         solidarityEndDate: 'تاريخ النهاية',
-        solidarityImage: 'صورة (اختياري)',
-        solidaritySubmit: 'نشر المنشور',
-        adminMapTitle: 'خريطة Algeria',
-        adminStatsTitle: 'الإحصائيات',
-        adminAlertsTitle: 'البلاغات الواردة',
-        adminSolidarityTitle: 'منشورات التضامن'
+        solidarityImage: 'صورة الحملة',
+        solidaritySubmit: 'نشر الحملة',
+        adminMapTitle: 'خريطة التبليغات والمراكز',
+        adminStatsTitle: 'إحصائيات الأداء',
+        adminAlertsTitle: 'التبليغات الحديثة',
+        adminSolidarityTitle: 'حملات التضامن والإغاثة'
     },
     fr: {
         navPredictions: '🔥 Carte des feux',
-        navReports: '📋 Signalements',
-        navShelters: '🏠 Abri',
-        navSolidarity: '❤️ Solidarité',
-        navAdmin: '⚙️ Administration',
+        navReports: '🚨 Signalements',
+        navShelters: '🏕️ Accueil',
+        navSolidarity: '🤲 Solidarité',
+        navAiAssistant: '🤖 Assistant',
+        navAdmin: '⚙️ Admin',
         sectionPredictionsTitle: '🔥 Carte des feux',
         sectionPredictionsDescription: 'Surveillance des feux de forêt en temps réel - données satellitaires en direct',
-        sectionReportsTitle: '📋 Signalements',
-        sectionReportsDescription: 'Signaler un feu de forêt et aider à protéger nos forêts',
-        sectionSheltersTitle: '🏠 Centres d\'accueil',
-        sectionSheltersDescription: 'Rechercher des centres d\'accueil et enregistrer de nouveaux centres',
-        sectionSolidarityTitle: '❤️ Solidarité',
-        sectionSolidarityDescription: 'Posts de solidarité, d\'aide et de bénévolat',
-        sectionAdminTitle: '⚙️ Panneau d\'administration',
-        sectionAdminDescription: 'Gestion de l\'application, du contenu et des statistiques',
-        btnRefresh: '🔄 Actualiser',
-        btnGps: '📍 Localiser',
+        sectionReportsTitle: '🚨 Signalements de feux',
+        sectionReportsDescription: 'Envoyer des signalements de feux de forêt aux services compétents',
+        sectionSheltersTitle: '🏕️ Hébergement et ravitaillement',
+        sectionSheltersDescription: 'Localiser les centres d\'hébergement et de ravitaillement pour aider les familles sinistrées',
+        sectionSolidarityTitle: '🤝 Solidarité et secours',
+        sectionSolidarityDescription: 'Associations, organisations et institutions organisant des opérations de solidarité et de collecte',
+        sectionAiAssistantTitle: '🤖 Assistant intelligent',
+        sectionAiAssistantDescription: 'Assistant intelligent pour répondre à vos questions sur les feux en Algérie',
+        sectionAdminTitle: '⚙️ Panneau de contrôle',
+        sectionAdminDescription: 'Surveillance et gestion de tous les signalements et centres d\'hébergement',
+        btnRefresh: '🔄 Actualiser les données',
+        btnGps: '📍 Localiser mon GPS',
         btnSend: 'Envoyer',
         btnLogin: 'Se connecter',
         btnRegister: 'Nouveau compte',
@@ -2092,10 +2142,10 @@ var translations = {
         registerPasswordConfirm: 'Confirmer le mot de passe',
         aiPlaceholder: 'Tapez votre question ici...',
         aiSend: 'Envoyer',
-        quickEmergency: '🚨 Numéros d\'urgence',
-        quickReport: '📋 Comment signaler?',
-        quickSafety: '🛡️ Conseils sécurité',
-        quickDonate: '❤️ Don et bénévolat',
+        quickEmergency: '📞 Numéros d\'urgence',
+        quickReport: '🔥 Signaler un feu',
+        quickSafety: '💡 Conseils sécurité',
+        quickDonate: '🤲 Contribuer',
         quickShelter: '🏠 Centres d\'accueil',
         quickFires: '🔥 Feux actifs',
         weatherTitle: 'Météo actuelle',
@@ -2111,52 +2161,55 @@ var translations = {
         reportLng: 'Longitude',
         reportDate: 'Date',
         reportTime: 'Heure',
-        reportImage: 'Image (optionnel)',
+        reportImage: 'Image du site',
         reportSubmit: 'Envoyer le signalement',
-        shelterFormTitle: 'Enregistrer un abri',
-        shelterName: 'Nom de l\'abri',
+        shelterFormTitle: 'Enregistrer un centre d\'accueil',
+        shelterName: 'Nom du centre',
         shelterWilaya: 'Wilaya',
         shelterMunicipality: 'Commune',
-        shelterPhone: 'Téléphone',
+        shelterPhone: 'Téléphone du centre',
         shelterLat: 'Latitude',
         shelterLng: 'Longitude',
-        shelterImage: 'Image (optionnel)',
-        shelterSubmit: 'Enregistrer l\'abri',
-        solidarityFormTitle: 'Publier un post de solidarité',
-        solidarityOrgName: 'Nom de l\'association / organisation',
-        solidarityType: 'Type de post',
+        shelterImage: 'Image du centre',
+        shelterSubmit: 'Enregistrer le centre',
+        solidarityFormTitle: 'Publier une campagne de solidarité',
+        solidarityOrgName: 'Nom de l\'association / institution',
+        solidarityType: 'Type de campagne',
         solidarityWilaya: 'Wilaya',
-        solidarityDescription: 'Description',
+        solidarityDescription: 'Description de la campagne',
         solidarityPhone: 'Téléphone',
         solidarityWhatsApp: 'Numéro WhatsApp',
         solidarityFacebook: 'Lien Facebook',
         solidarityStartDate: 'Date de début',
         solidarityEndDate: 'Date de fin',
-        solidarityImage: 'Image (optionnel)',
-        solidaritySubmit: 'Publier le post',
-        adminMapTitle: 'Carte de l\'Algérie',
-        adminStatsTitle: 'Statistiques',
-        adminAlertsTitle: 'Signalements reçus',
-        adminSolidarityTitle: 'Posts de solidarité'
+        solidarityImage: 'Image de la campagne',
+        solidaritySubmit: 'Publier la campagne',
+        adminMapTitle: 'Carte des signalements et centres',
+        adminStatsTitle: 'Statistiques de performance',
+        adminAlertsTitle: 'Signalements récents',
+        adminSolidarityTitle: 'Campagnes de solidarité et secours'
     },
     en: {
         navPredictions: '🔥 Fire Map',
-        navReports: '📋 Reports',
-        navShelters: '🏠 Shelter',
-        navSolidarity: '❤️ Solidarity',
-        navAdmin: '⚙️ Administration',
-        sectionPredictionsTitle: '🔥 Fire Map',
-        sectionPredictionsDescription: 'Real-time forest fire monitoring - live satellite data',
-        sectionReportsTitle: '📋 Reports',
-        sectionReportsDescription: 'Report a forest fire and help protect our forests',
-        sectionSheltersTitle: '🏠 Shelter Centers',
-        sectionSheltersDescription: 'Search for shelter centers and register new ones',
-        sectionSolidarityTitle: '❤️ Solidarity',
-        sectionSolidarityDescription: 'Solidarity, aid, and volunteering posts',
-        sectionAdminTitle: '⚙️ Admin Panel',
-        sectionAdminDescription: 'Application, content, and statistics management',
-        btnRefresh: '🔄 Refresh',
-        btnGps: '📍 Locate',
+        navReports: '🚨 Reports',
+        navShelters: '🏕️ Shelter',
+        navSolidarity: '🤲 Solidarity',
+        navAiAssistant: '🤖 Assistant',
+        navAdmin: '⚙️ Control',
+        sectionPredictionsTitle: '🔥 Algeria Fire Map',
+        sectionPredictionsDescription: 'Real-time forest fire monitoring in Algeria - live satellite data',
+        sectionReportsTitle: '🚨 Fire Reports',
+        sectionReportsDescription: 'Send instant reports about forest fires to the relevant authorities',
+        sectionSheltersTitle: '🏕️ Shelter & Relief',
+        sectionSheltersDescription: 'Locate shelter and relief centers to help affected families',
+        sectionSolidarityTitle: '🤝 Solidarity & Relief',
+        sectionSolidarityDescription: 'Charities, organizations and institutions organizing solidarity and donation drives',
+        sectionAiAssistantTitle: '🤖 Smart Assistant',
+        sectionAiAssistantDescription: 'AI assistant to answer your questions about fires in Algeria',
+        sectionAdminTitle: '⚙️ Control Panel',
+        sectionAdminDescription: 'Monitor and manage all reports and shelter centers',
+        btnRefresh: '🔄 Refresh Data',
+        btnGps: '📍 My GPS Location',
         btnSend: 'Send',
         btnLogin: 'Login',
         btnRegister: 'New Account',
@@ -2172,10 +2225,10 @@ var translations = {
         registerPasswordConfirm: 'Confirm Password',
         aiPlaceholder: 'Type your question here...',
         aiSend: 'Send',
-        quickEmergency: '🚨 Emergency Numbers',
-        quickReport: '📋 How to report?',
-        quickSafety: '🛡️ Safety Tips',
-        quickDonate: '❤️ Donate & Volunteer',
+        quickEmergency: '📞 Emergency Numbers',
+        quickReport: '🔥 Report a Fire',
+        quickSafety: '💡 Safety Tips',
+        quickDonate: '🤲 Contribute',
         quickShelter: '🏠 Shelter Centers',
         quickFires: '🔥 Active Fires',
         weatherTitle: 'Current Weather',
@@ -2191,33 +2244,33 @@ var translations = {
         reportLng: 'Longitude',
         reportDate: 'Date',
         reportTime: 'Time',
-        reportImage: 'Image (optional)',
+        reportImage: 'Site Image',
         reportSubmit: 'Submit Report',
-        shelterFormTitle: 'Register Shelter',
-        shelterName: 'Shelter Name',
+        shelterFormTitle: 'Register Shelter Center',
+        shelterName: 'Center Name',
         shelterWilaya: 'Wilaya',
         shelterMunicipality: 'Municipality',
-        shelterPhone: 'Phone',
+        shelterPhone: 'Center Phone',
         shelterLat: 'Latitude',
         shelterLng: 'Longitude',
-        shelterImage: 'Image (optional)',
-        shelterSubmit: 'Register Shelter',
-        solidarityFormTitle: 'Publish Solidarity Post',
-        solidarityOrgName: 'Organization Name',
-        solidarityType: 'Post Type',
+        shelterImage: 'Center Image',
+        shelterSubmit: 'Register Center',
+        solidarityFormTitle: 'Publish Solidarity Campaign',
+        solidarityOrgName: 'Organization / Institution Name',
+        solidarityType: 'Campaign Type',
         solidarityWilaya: 'Wilaya',
-        solidarityDescription: 'Description',
+        solidarityDescription: 'Campaign Description',
         solidarityPhone: 'Phone',
         solidarityWhatsApp: 'WhatsApp Number',
-        solidarityFacebook: 'Facebook Link',
+        solidarityFacebook: 'Facebook Page Link',
         solidarityStartDate: 'Start Date',
         solidarityEndDate: 'End Date',
-        solidarityImage: 'Image (optional)',
-        solidaritySubmit: 'Publish Post',
-        adminMapTitle: 'Algeria Map',
-        adminStatsTitle: 'Statistics',
-        adminAlertsTitle: 'Received Reports',
-        adminSolidarityTitle: 'Solidarity Posts'
+        solidarityImage: 'Campaign Image',
+        solidaritySubmit: 'Publish Campaign',
+        adminMapTitle: 'Reports & Centers Map',
+        adminStatsTitle: 'Performance Statistics',
+        adminAlertsTitle: 'Recent Reports',
+        adminSolidarityTitle: 'Solidarity & Relief Campaigns'
     }
 };
 
@@ -2255,15 +2308,34 @@ function t(key) {
     return key;
 }
 
+function sectionToCamelCase(section) {
+    return section.split('-').map(function (part, i) {
+        return i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1);
+    }).join('');
+}
+
 function applyTranslations() {
     var navTabs = document.querySelectorAll('.nav-tab');
     navTabs.forEach(function (tab) {
         var section = tab.getAttribute('data-section');
         if (section) {
-            var key = 'nav' + section.charAt(0).toUpperCase() + section.slice(1);
+            var key = 'nav' + sectionToCamelCase(section);
             var translated = t(key);
             if (translated !== key) {
                 var textSpan = tab.querySelector('span:not(.tab-icon):not(.tab-badge)');
+                if (textSpan) textSpan.textContent = translated;
+            }
+        }
+    });
+
+    var mobileMenuItems = document.querySelectorAll('.mobile-menu-item');
+    mobileMenuItems.forEach(function (item) {
+        var section = item.getAttribute('data-section');
+        if (section) {
+            var key = 'nav' + sectionToCamelCase(section);
+            var translated = t(key);
+            if (translated !== key) {
+                var textSpan = item.querySelector('span:not(.menu-icon)');
                 if (textSpan) textSpan.textContent = translated;
             }
         }
@@ -2274,12 +2346,15 @@ function applyTranslations() {
         var sectionEl = document.getElementById('section-' + id);
         if (!sectionEl) return;
         var titleEl = sectionEl.querySelector('.section-title');
-        var descEl = sectionEl.querySelector('.section-description');
-        var titleKey = 'section' + id.charAt(0).toUpperCase() + id.slice(1) + 'Title';
-        var descKey = 'section' + id.charAt(0).toUpperCase() + id.slice(1) + 'Description';
+        var descEl = sectionEl.querySelector('.section-desc');
+        var camelId = sectionToCamelCase(id);
+        var titleKey = 'section' + camelId.charAt(0).toUpperCase() + camelId.slice(1) + 'Title';
+        var descKey = 'section' + camelId.charAt(0).toUpperCase() + camelId.slice(1) + 'Description';
         if (titleEl) {
+            var iconSpan = titleEl.querySelector('.icon');
+            var iconHtml = iconSpan ? iconSpan.outerHTML + ' ' : '';
             var translatedTitle = t(titleKey);
-            if (translatedTitle !== titleKey) titleEl.textContent = translatedTitle;
+            if (translatedTitle !== titleKey) titleEl.innerHTML = iconHtml + translatedTitle;
         }
         if (descEl) {
             var translatedDesc = t(descKey);
