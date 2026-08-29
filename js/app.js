@@ -795,37 +795,29 @@ function refreshFiremapData() {
 
 function generateSimulatedFiremapData() {
     var fires = [
-        { lat: 36.75, lng: 3.06, name: 'الجزائر العاصمة', frp: 45.2, brightness: 312, size: 1200, confidence: 85, sat: 'VIIRS' },
-        { lat: 36.28, lng: 6.26, name: 'قسنطينة', frp: 32.1, brightness: 308, size: 800, confidence: 78, sat: 'VIIRS' },
-        { lat: 35.69, lng: -0.63, name: 'وهران', frp: 28.7, brightness: 305, size: 650, confidence: 72, sat: 'MODIS' },
-        { lat: 36.83, lng: 10.17, name: 'near Tunis', frp: 55.3, brightness: 318, size: 2100, confidence: 92, sat: 'VIIRS' },
-        { lat: 35.76, lng: 0.55, name: 'عنابة', frp: 18.9, brightness: 301, size: 400, confidence: 65, sat: 'MODIS' },
-        { lat: 34.88, lng: -1.31, name: 'تلمسان', frp: 42.6, brightness: 315, size: 1500, confidence: 88, sat: 'VIIRS' },
-        { lat: 36.17, lng: 5.41, name: 'سطيف', frp: 35.4, brightness: 310, size: 950, confidence: 80, sat: 'VIIRS' },
-        { lat: 36.38, lng: 2.75, name: 'المدية', frp: 22.3, brightness: 303, size: 550, confidence: 70, sat: 'MODIS' },
-        { lat: 36.91, lng: 7.77, name: 'قالمة', frp: 62.1, brightness: 322, size: 2800, confidence: 95, sat: 'VIIRS' },
-        { lat: 35.39, lng: 1.32, name: 'تيارت', frp: 15.8, brightness: 299, size: 300, confidence: 60, sat: 'MODIS' },
-        { lat: 36.06, lng: 4.75, name: 'بجاية', frp: 38.9, brightness: 313, size: 1100, confidence: 83, sat: 'VIIRS' },
-        { lat: 35.85, lng: -0.08, name: 'الشلف', frp: 27.4, brightness: 307, size: 700, confidence: 75, sat: 'MODIS' },
-        { lat: 36.46, lng: 7.44, name: 'جيجل', frp: 31.2, brightness: 309, size: 850, confidence: 77, sat: 'VIIRS' },
-        { lat: 35.19, lng: 1.29, name: 'سيدي بلعباس', frp: 19.6, brightness: 302, size: 420, confidence: 67, sat: 'MODIS' },
-        { lat: 36.71, lng: 5.08, name: 'بومرداس', frp: 24.8, brightness: 306, size: 600, confidence: 73, sat: 'VIIRS' },
-        { lat: 33.80, lng: 2.87, name: 'الأغواط', frp: 12.3, brightness: 296, size: 200, confidence: 55, sat: 'MODIS' },
-        { lat: 34.85, lng: 5.73, name: 'بسكرة', frp: 33.7, brightness: 311, size: 900, confidence: 79, sat: 'VIIRS' },
-        { lat: 35.56, lng: 6.17, name: 'باتنة', frp: 41.2, brightness: 314, size: 1300, confidence: 86, sat: 'VIIRS' },
-        { lat: 36.27, lng: 2.75, name: 'المدية الشمالية', frp: 16.5, brightness: 300, size: 350, confidence: 62, sat: 'MODIS' },
-        { lat: 36.59, lng: 2.45, name: 'تيبازة', frp: 20.1, brightness: 304, size: 480, confidence: 69, sat: 'MODIS' }
+        { lat: 36.75, lng: 3.06, name: 'الجزائر العاصمة', areaHa: 150, satReturns: 45, activity: 'High' },
+        { lat: 36.28, lng: 6.26, name: 'قسنطينة', areaHa: 80, satReturns: 32, activity: 'Medium' },
+        { lat: 35.69, lng: -0.63, name: 'وهران', areaHa: 65, satReturns: 28, activity: 'Medium' },
+        { lat: 36.83, lng: 10.17, name: 'جلفة', areaHa: 210, satReturns: 55, activity: 'High' },
+        { lat: 35.76, lng: 0.55, name: 'عنابة', areaHa: 40, satReturns: 18, activity: 'Low' },
+        { lat: 34.88, lng: -1.31, name: 'تلمسان', areaHa: 150, satReturns: 42, activity: 'High' },
+        { lat: 36.17, lng: 5.41, name: 'سطيف', areaHa: 95, satReturns: 35, activity: 'Medium' },
+        { lat: 36.38, lng: 2.75, name: 'المدية', areaHa: 55, satReturns: 22, activity: 'Low' },
+        { lat: 36.91, lng: 7.77, name: 'قالمة', areaHa: 280, satReturns: 62, activity: 'High' },
+        { lat: 35.39, lng: 1.32, name: 'تيارت', areaHa: 30, satReturns: 15, activity: 'Low' },
+        { lat: 36.06, lng: 4.75, name: 'بجاية', areaHa: 110, satReturns: 38, activity: 'Medium' },
+        { lat: 35.85, lng: -0.08, name: 'الشلف', areaHa: 70, satReturns: 27, activity: 'Low' },
+        { lat: 36.46, lng: 7.44, name: 'جيجل', areaHa: 85, satReturns: 31, activity: 'Medium' },
+        { lat: 35.19, lng: 1.29, name: 'سيدي بلعباس', areaHa: 42, satReturns: 19, activity: 'Low' },
+        { lat: 36.71, lng: 5.08, name: 'بومرداس', areaHa: 60, satReturns: 24, activity: 'Low' },
+        { lat: 33.80, lng: 2.87, name: 'الأغواط', areaHa: 20, satReturns: 12, activity: 'Low' },
+        { lat: 34.85, lng: 5.73, name: 'بسكرة', areaHa: 90, satReturns: 33, activity: 'Medium' },
+        { lat: 35.56, lng: 6.17, name: 'باتنة', areaHa: 130, satReturns: 41, activity: 'High' },
+        { lat: 36.27, lng: 2.75, name: 'المدية الشمالية', areaHa: 35, satReturns: 16, activity: 'Low' },
+        { lat: 36.59, lng: 2.45, name: 'تيبازة', areaHa: 48, satReturns: 20, activity: 'Low' }
     ];
 
     return fires.map(function (f, i) {
-        var now = new Date();
-        var acqDate = now.getFullYear() + '-' +
-            String(now.getMonth() + 1).padStart(2, '0') + '-' +
-            String(now.getDate()).padStart(2, '0');
-        var acqTime = String(now.getHours()).padStart(2, '0') +
-            String(now.getMinutes()).padStart(2, '0');
-        var dayNight = (now.getHours() >= 6 && now.getHours() < 18) ? 'D' : 'N';
-
         return {
             id: 'sim_' + i + '_' + Date.now(),
             type: 'Feature',
@@ -834,20 +826,10 @@ function generateSimulatedFiremapData() {
                 coordinates: [f.lng, f.lat]
             },
             properties: {
-                name: f.name,
-                frp: f.frp,
-                brightness: f.brightness,
-                area: f.size,
-                confidence: f.confidence,
-                daynight: dayNight,
-                acq_date: acqDate,
-                acq_time: acqTime,
-                satellite: f.sat,
-                instrument: f.sat === 'VIIRS' ? 'VIIRS' : 'MODIS',
-                status: 'Active',
-                bright_t31: f.brightness - 20,
-                scan: 1,
-                track: 1
+                area_ha: f.areaHa,
+                area_sq_meters: f.areaHa * 10000,
+                satellite_returns_24hrs: f.satReturns,
+                activity_rating: f.activity
             }
         };
     });
