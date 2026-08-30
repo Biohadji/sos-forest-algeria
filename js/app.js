@@ -551,7 +551,102 @@ function showDashboard() {
     initNavigation();
     updateUserInfo();
     setupAdminAccess();
-    switchSection(currentSection);
+    currentSection = 'home';
+    switchSection('home');
+}
+
+var homeDiaporamaIndex = 0;
+var homeDiaporamaInterval = null;
+
+function loadHomeDiaporama() {
+    var container = document.getElementById('homeDiaporamaSlides');
+    var dotsContainer = document.getElementById('homeDiaporamaDots');
+    if (!container) return;
+
+    var posts = getAllSolidarityPosts();
+
+    if (posts.length === 0) {
+        container.innerHTML = '<div style="text-align:center;padding:60px;color:#999;width:100%;"><div style="font-size:48px;margin-bottom:12px;">🤲</div><p>لا توجد حملات نشطة حالياً</p></div>';
+        if (dotsContainer) dotsContainer.innerHTML = '';
+        return;
+    }
+
+    var slidesHtml = '';
+    var dotsHtml = '';
+    posts.forEach(function (post, idx) {
+        var imageHtml = post.image ? '<img src="' + post.image + '" style="width:100%;height:280px;object-fit:cover;" alt="' + sanitizeHTML(post.orgName) + '">' : '<div style="width:100%;height:280px;background:linear-gradient(135deg,#1a2a3a,#0a1628);display:flex;align-items:center;justify-content:center;font-size:64px;">🤲</div>';
+        var typeIcon = '❤️';
+        if (post.type === 'donation') typeIcon = '💰';
+        else if (post.type === 'volunteer') typeIcon = '🤝';
+        else if (post.type === 'shelter') typeIcon = '🏠';
+        else if (post.type === 'relief') typeIcon = '📦';
+        else if (post.type === 'medical') typeIcon = '🏥';
+        else if (post.type === 'food') typeIcon = '🍎';
+
+        slidesHtml += '<div style="min-width:100%;position:relative;">';
+        slidesHtml += imageHtml;
+        slidesHtml += '<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:20px;color:white;">';
+        slidesHtml += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">';
+        slidesHtml += '<span style="background:rgba(231,76,60,0.8);padding:4px 12px;border-radius:20px;font-size:12px;">' + typeIcon + ' ' + sanitizeHTML(post.typeLabel) + '</span>';
+        slidesHtml += '<span style="font-size:11px;opacity:0.8;">🏛️ ' + sanitizeHTML(post.wilaya) + '</span>';
+        slidesHtml += '</div>';
+        slidesHtml += '<h3 style="margin:0 0 8px;font-size:16px;font-weight:700;">' + sanitizeHTML(post.orgName) + '</h3>';
+        slidesHtml += '<p style="margin:0;font-size:12px;opacity:0.9;line-height:1.6;">' + sanitizeHTML(post.description).substring(0, 100) + '...</p>';
+        slidesHtml += '</div>';
+        slidesHtml += '</div>';
+
+        dotsHtml += '<span onclick="goToHomeDiaporama(' + idx + ')" style="width:10px;height:10px;border-radius:50%;background:' + (idx === 0 ? '#e74c3c' : 'rgba(255,255,255,0.4)') + ';cursor:pointer;transition:all 0.3s;"></span>';
+    });
+    container.innerHTML = slidesHtml;
+    if (dotsContainer) dotsContainer.innerHTML = dotsHtml;
+    homeDiaporamaIndex = 0;
+    if (homeDiaporamaInterval) clearInterval(homeDiaporamaInterval);
+    homeDiaporamaInterval = setInterval(nextHomeDiaporama, 4000);
+}
+
+function nextHomeDiaporama() {
+    var slides = document.getElementById('homeDiaporamaSlides');
+    var dots = document.getElementById('homeDiaporamaDots');
+    var posts = getAllSolidarityPosts();
+    if (!slides || !posts.length) return;
+    homeDiaporamaIndex = (homeDiaporamaIndex + 1) % posts.length;
+    updateHomeDiaporama(slides, dots);
+}
+
+function prevHomeDiaporama() {
+    var slides = document.getElementById('homeDiaporamaSlides');
+    var dots = document.getElementById('homeDiaporamaDots');
+    var posts = getAllSolidarityPosts();
+    if (!slides || !posts.length) return;
+    homeDiaporamaIndex = (homeDiaporamaIndex - 1 + posts.length) % posts.length;
+    updateHomeDiaporama(slides, dots);
+    if (homeDiaporamaInterval) {
+        clearInterval(homeDiaporamaInterval);
+        homeDiaporamaInterval = setInterval(nextHomeDiaporama, 4000);
+    }
+}
+
+function goToHomeDiaporama(idx) {
+    var slides = document.getElementById('homeDiaporamaSlides');
+    var dots = document.getElementById('homeDiaporamaDots');
+    if (!slides) return;
+    homeDiaporamaIndex = idx;
+    updateHomeDiaporama(slides, dots);
+    if (homeDiaporamaInterval) {
+        clearInterval(homeDiaporamaInterval);
+        homeDiaporamaInterval = setInterval(nextHomeDiaporama, 4000);
+    }
+}
+
+function updateHomeDiaporama(slides, dots) {
+    slides.style.transform = 'translateX(-' + (homeDiaporamaIndex * 100) + '%)';
+    if (dots) {
+        var dotElements = dots.querySelectorAll('span');
+        dotElements.forEach(function (dot, idx) {
+            dot.style.background = idx === homeDiaporamaIndex ? '#e74c3c' : 'rgba(255,255,255,0.4)';
+            dot.style.transform = idx === homeDiaporamaIndex ? 'scale(1.3)' : 'scale(1)';
+        });
+    }
 }
 
 function initNavigation() {
@@ -596,6 +691,9 @@ function switchSection(section) {
         target.style.display = 'block';
     }
     switch (section) {
+        case 'home':
+            loadHomeDiaporama();
+            break;
         case 'predictions':
             initPredictions();
             break;

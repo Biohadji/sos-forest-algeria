@@ -194,7 +194,11 @@
         <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
       </div>
       <div class="mobile-menu-items">
-        <button class="mobile-menu-item active" data-section="predictions" onclick="mobileMenuNavigate('predictions')">
+        <button class="mobile-menu-item active" data-section="home" onclick="mobileMenuNavigate('home')">
+          <span class="menu-icon">🏠</span>
+          <span>الرئيسية</span>
+        </button>
+        <button class="mobile-menu-item" data-section="predictions" onclick="mobileMenuNavigate('predictions')">
           <span class="menu-icon">🔥</span>
           <span>وضعية الحرائق</span>
         </button>
@@ -225,7 +229,11 @@
     </div>
 
     <div class="nav-tabs">
-      <button class="nav-tab active" data-section="predictions">
+      <button class="nav-tab active" data-section="home">
+        <span class="tab-icon">🏠</span>
+        <span>الرئيسية</span>
+      </button>
+      <button class="nav-tab" data-section="predictions">
         <span class="tab-icon">🔥</span>
         <span>وضعية الحرائق</span>
       </button>
@@ -253,6 +261,92 @@
     </div>
 
     <div class="main-content">
+
+      <div class="section" id="section-home">
+        <div style="text-align:center;padding:20px 0 30px;">
+          <h1 style="font-size:28px;font-weight:900;color:var(--text-primary);margin:0 0 8px;">
+            <span style="color:#e74c3c;">🔥 SOS</span> FOREST <span style="color:#00c853;">ALGERIA</span>
+          </h1>
+          <p style="font-size:14px;color:var(--text-secondary);margin:0;">نظام مراقبة ومنع حرائق الغابات في الجزائر</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:30px;">
+          <div onclick="switchSection('predictions')" style="cursor:pointer;background:linear-gradient(135deg,rgba(231,76,60,0.15),rgba(231,76,60,0.02));border:1px solid rgba(231,76,60,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(231,76,60,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            <div style="font-size:40px;margin-bottom:8px;">🔥</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">وضعية الحرائق</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">بيانات مباشرة من الأقمار</div>
+          </div>
+          <div onclick="switchSection('reports')" style="cursor:pointer;background:linear-gradient(135deg,rgba(255,152,0,0.15),rgba(255,152,0,0.02));border:1px solid rgba(255,152,0,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(255,152,0,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            <div style="font-size:40px;margin-bottom:8px;">🚨</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">التبليغات</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">الإبلاغ عن حرائق الغابات</div>
+          </div>
+          <div onclick="switchSection('shelters')" style="cursor:pointer;background:linear-gradient(135deg,rgba(0,150,255,0.15),rgba(0,150,255,0.02));border:1px solid rgba(0,150,255,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(0,150,255,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            <div style="font-size:40px;margin-bottom:8px;">🏕️</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">مراكز الإيواء</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">البحث والتسجيل</div>
+          </div>
+          <div onclick="switchSection('solidarity')" style="cursor:pointer;background:linear-gradient(135deg,rgba(156,39,176,0.15),rgba(156,39,176,0.02));border:1px solid rgba(156,39,176,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(156,39,176,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            <div style="font-size:40px;margin-bottom:8px;">🤲</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">التضامن</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">حملات الإغاثة والتبرع</div>
+          </div>
+          <div onclick="switchSection('ai-assistant')" style="cursor:pointer;background:linear-gradient(135deg,rgba(0,200,83,0.15),rgba(0,200,83,0.02));border:1px solid rgba(0,200,83,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(0,200,83,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            <div style="font-size:40px;margin-bottom:8px;">🤖</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">المساعد الذكي</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">اسأل المساعد</div>
+          </div>
+          <div onclick="switchSection('admin')" style="cursor:pointer;background:linear-gradient(135deg,rgba(100,100,100,0.15),rgba(100,100,100,0.02));border:1px solid rgba(100,100,100,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(100,100,100,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            <div style="font-size:40px;margin-bottom:8px;">⚙️</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">لوحة التحكم</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">إدارة التطبيق</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <h3 class="card-title">🤲 أحدث حملات التضامن والإغاثة</h3>
+          </div>
+          <div class="card-body">
+            <div id="homeDiaporama" style="position:relative;width:100%;overflow:hidden;border-radius:12px;background:#0a1628;">
+              <div id="homeDiaporamaSlides" style="display:flex;transition:transform 0.5s ease;"></div>
+              <button onclick="prevHomeDiaporama()" style="position:absolute;top:50%;left:10px;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;z-index:10;">❮</button>
+              <button onclick="nextHomeDiaporama()" style="position:absolute;top:50%;right:10px;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;z-index:10;">❯</button>
+              <div id="homeDiaporamaDots" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <h3 class="card-title">📞 أرقام الطوارئ</h3>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;">
+              <a href="tel:14" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.2);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:28px;">🔥</div>
+                <div style="font-size:20px;font-weight:900;color:#e74c3c;">14</div>
+                <div style="font-size:11px;color:var(--text-muted);">الإطفاء</div>
+              </a>
+              <a href="tel:17" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:rgba(0,150,255,0.1);border:1px solid rgba(0,150,255,0.2);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:28px;">👮</div>
+                <div style="font-size:20px;font-weight:900;color:#0096ff;">17</div>
+                <div style="font-size:11px;color:var(--text-muted);">الشرطة</div>
+              </a>
+              <a href="tel:1055" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.2);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:28px;">🚑</div>
+                <div style="font-size:20px;font-weight:900;color:#00c853;">1055</div>
+                <div style="font-size:11px;color:var(--text-muted);">الإسعاف</div>
+              </a>
+              <a href="tel:1414" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:rgba(255,152,0,0.1);border:1px solid rgba(255,152,0,0.2);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:28px;">🛡️</div>
+                <div style="font-size:20px;font-weight:900;color:#ff9800;">1414</div>
+                <div style="font-size:11px;color:var(--text-muted);">الحماية المدنية</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="section active" id="section-predictions">
         <div class="section-header">
