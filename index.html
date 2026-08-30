@@ -698,13 +698,13 @@
             <h3 class="card-title">🤝 حملات التضامن النشطة</h3>
           </div>
           <div class="card-body">
-            <div class="alerts-list" id="solidarityList">
-              <div style="text-align:center;padding:40px;color:var(--text-muted);">
-                <div style="font-size:48px;margin-bottom:12px;">🤲</div>
-                <p>لا توجد حملات نشطة حالياً</p>
-                <p style="font-size:12px;margin-top:8px;">كن أول من ينشر حملة تضامن</p>
-              </div>
+            <div id="solidarityDiaporama" style="position:relative;width:100%;overflow:hidden;border-radius:12px;background:#0a1628;">
+              <div id="diaporamaSlides" style="display:flex;transition:transform 0.5s ease;"></div>
+              <button onclick="prevDiaporama()" style="position:absolute;top:50%;left:10px;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;z-index:10;">❮</button>
+              <button onclick="nextDiaporama()" style="position:absolute;top:50%;right:10px;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;z-index:10;">❯</button>
+              <div id="diaporamaDots" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10;"></div>
             </div>
+            <div class="alerts-list" id="solidarityList" style="margin-top:16px;"></div>
           </div>
         </div>
       </div>

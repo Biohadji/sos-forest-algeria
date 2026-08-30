@@ -1667,57 +1667,134 @@ function handleSolidarityImagePreview(e) {
     reader.readAsDataURL(file);
 }
 
+var currentDiaporamaIndex = 0;
+var diaporamaInterval = null;
+
 function loadSolidarityPosts() {
     var container = document.getElementById('solidarityList');
+    var diaporamaContainer = document.getElementById('diaporamaSlides');
+    var dotsContainer = document.getElementById('diaporamaDots');
     if (!container) return;
 
     solidarityPosts = getAllSolidarityPosts();
 
     if (solidarityPosts.length === 0) {
-        container.innerHTML = '<div class="empty-state"><p>❤️ لا توجد منشورات تضامن حالياً</p><p>كن أول من ينشر منشور تضامن!</p></div>';
+        if (diaporamaContainer) diaporamaContainer.innerHTML = '<div style="text-align:center;padding:60px;color:#999;width:100%;"><div style="font-size:48px;margin-bottom:12px;">🤲</div><p>لا توجد حملات نشطة حالياً</p></div>';
+        if (dotsContainer) dotsContainer.innerHTML = '';
+        container.innerHTML = '';
         return;
     }
 
-    var html = '';
+    if (diaporamaContainer) {
+        var slidesHtml = '';
+        var dotsHtml = '';
+        solidarityPosts.forEach(function (post, idx) {
+            var imageHtml = post.image ? '<img src="' + post.image + '" style="width:100%;height:300px;object-fit:cover;" alt="' + sanitizeHTML(post.orgName) + '">' : '<div style="width:100%;height:300px;background:linear-gradient(135deg,#1a2a3a,#0a1628);display:flex;align-items:center;justify-content:center;font-size:64px;">🤲</div>';
+            var typeIcon = '❤️';
+            if (post.type === 'donation') typeIcon = '💰';
+            else if (post.type === 'volunteer') typeIcon = '🤝';
+            else if (post.type === 'shelter') typeIcon = '🏠';
+            else if (post.type === 'relief') typeIcon = '📦';
+            else if (post.type === 'medical') typeIcon = '🏥';
+            else if (post.type === 'food') typeIcon = '🍎';
+
+            slidesHtml += '<div class="diaporama-slide" style="min-width:100%;position:relative;">';
+            slidesHtml += imageHtml;
+            slidesHtml += '<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:20px;color:white;">';
+            slidesHtml += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">';
+            slidesHtml += '<span style="background:rgba(231,76,60,0.8);padding:4px 12px;border-radius:20px;font-size:12px;">' + typeIcon + ' ' + sanitizeHTML(post.typeLabel) + '</span>';
+            slidesHtml += '<span style="font-size:11px;opacity:0.8;">🏛️ ' + sanitizeHTML(post.wilaya) + '</span>';
+            slidesHtml += '</div>';
+            slidesHtml += '<h3 style="margin:0 0 8px;font-size:18px;font-weight:700;">' + sanitizeHTML(post.orgName) + '</h3>';
+            slidesHtml += '<p style="margin:0 0 8px;font-size:13px;opacity:0.9;line-height:1.6;">' + sanitizeHTML(post.description) + '</p>';
+            slidesHtml += '<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+            if (post.phone) slidesHtml += '<a href="tel:' + post.phone + '" style="background:rgba(0,200,83,0.8);color:white;padding:6px 12px;border-radius:20px;font-size:11px;text-decoration:none;">📞 ' + post.phone + '</a>';
+            if (post.whatsapp) slidesHtml += '<a href="https://wa.me/' + post.whatsapp + '" target="_blank" style="background:rgba(37,211,102,0.8);color:white;padding:6px 12px;border-radius:20px;font-size:11px;text-decoration:none;">💬 WhatsApp</a>';
+            if (post.facebook) slidesHtml += '<a href="' + post.facebook + '" target="_blank" style="background:rgba(24,119,242,0.8);color:white;padding:6px 12px;border-radius:20px;font-size:11px;text-decoration:none;">📘 Facebook</a>';
+            slidesHtml += '</div>';
+            slidesHtml += '</div>';
+            slidesHtml += '</div>';
+
+            dotsHtml += '<span onclick="goToDiaporama(' + idx + ')" style="width:10px;height:10px;border-radius:50%;background:' + (idx === 0 ? '#e74c3c' : 'rgba(255,255,255,0.4)') + ';cursor:pointer;transition:all 0.3s;"></span>';
+        });
+        diaporamaContainer.innerHTML = slidesHtml;
+        if (dotsContainer) dotsContainer.innerHTML = dotsHtml;
+        currentDiaporamaIndex = 0;
+        if (diaporamaInterval) clearInterval(diaporamaInterval);
+        diaporamaInterval = setInterval(nextDiaporama, 5000);
+    }
+
+    var listHtml = '';
     solidarityPosts.forEach(function (post) {
-        var imageHtml = post.image ? '<img src="' + post.image + '" class="solidarity-image" alt="صورة" loading="lazy">' : '';
         var typeIcon = '❤️';
         if (post.type === 'donation') typeIcon = '💰';
         else if (post.type === 'volunteer') typeIcon = '🤝';
         else if (post.type === 'shelter') typeIcon = '🏠';
+        else if (post.type === 'relief') typeIcon = '📦';
+        else if (post.type === 'medical') typeIcon = '🏥';
+        else if (post.type === 'food') typeIcon = '🍎';
 
-        html += '<div class="solidarity-card">';
-        html += '<div class="solidarity-header">';
-        html += '<span class="solidarity-type ' + post.type + '">' + typeIcon + ' ' + post.typeLabel + '</span>';
-        html += '<span class="solidarity-time">' + getTimeAgo(post.createdAt) + '</span>';
-        html += '</div>';
-        html += '<div class="solidarity-org">' + post.orgName + '</div>';
-        html += '<div class="solidarity-body">';
-        html += '<p class="solidarity-desc">' + post.description + '</p>';
-        html += '<div class="solidarity-details">';
-        html += '<div class="detail-item">🏛️ الولاية: ' + sanitizeHTML(post.wilaya) + '</div>';
-        if (post.startDate) html += '<div class="detail-item">📅 يبدأ: ' + post.startDate + '</div>';
-        if (post.endDate) html += '<div class="detail-item">📅 ينتهي: ' + post.endDate + '</div>';
-        html += '</div>';
-        html += imageHtml;
-        html += '</div>';
-        html += '<div class="solidarity-contact">';
-        if (post.phone) {
-            html += '<a href="tel:' + post.phone + '" class="contact-btn phone"><i class="fas fa-phone"></i> ' + post.phone + '</a>';
-        }
-        if (post.whatsapp) {
-            html += '<a href="https://wa.me/' + post.whatsapp + '" target="_blank" class="contact-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>';
-        }
-        if (post.facebook) {
-            html += '<a href="' + post.facebook + '" target="_blank" class="contact-btn facebook"><i class="fab fa-facebook"></i> Facebook</a>';
-        }
-        html += '</div>';
-        html += '<div class="solidarity-poster">';
-        html += '<span class="poster-info">نشر بواسطة: ' + sanitizeHTML(post.userName || post.userEmail) + '</span>';
-        html += '</div>';
-        html += '</div>';
+        listHtml += '<div class="solidarity-card">';
+        listHtml += '<div class="solidarity-header">';
+        listHtml += '<span class="solidarity-type ' + post.type + '">' + typeIcon + ' ' + post.typeLabel + '</span>';
+        listHtml += '<span class="solidarity-time">' + getTimeAgo(post.createdAt) + '</span>';
+        listHtml += '</div>';
+        listHtml += '<div class="solidarity-org">' + sanitizeHTML(post.orgName) + '</div>';
+        listHtml += '<div class="solidarity-body">';
+        listHtml += '<p class="solidarity-desc">' + sanitizeHTML(post.description) + '</p>';
+        listHtml += '<div class="solidarity-details">';
+        listHtml += '<div class="detail-item">🏛️ الولاية: ' + sanitizeHTML(post.wilaya) + '</div>';
+        if (post.startDate) listHtml += '<div class="detail-item">📅 يبدأ: ' + post.startDate + '</div>';
+        if (post.endDate) listHtml += '<div class="detail-item">📅 ينتهي: ' + post.endDate + '</div>';
+        listHtml += '</div>';
+        listHtml += '</div>';
+        listHtml += '<div class="solidarity-contact">';
+        if (post.phone) listHtml += '<a href="tel:' + post.phone + '" class="contact-btn phone"><i class="fas fa-phone"></i> ' + post.phone + '</a>';
+        if (post.whatsapp) listHtml += '<a href="https://wa.me/' + post.whatsapp + '" target="_blank" class="contact-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>';
+        if (post.facebook) listHtml += '<a href="' + post.facebook + '" target="_blank" class="contact-btn facebook"><i class="fab fa-facebook"></i> Facebook</a>';
+        listHtml += '</div>';
+        listHtml += '</div>';
     });
-    container.innerHTML = html;
+    container.innerHTML = listHtml;
+}
+
+function nextDiaporama() {
+    var slides = document.getElementById('diaporamaSlides');
+    var dots = document.getElementById('diaporamaDots');
+    if (!slides || !solidarityPosts.length) return;
+    currentDiaporamaIndex = (currentDiaporamaIndex + 1) % solidarityPosts.length;
+    updateDiaporama(slides, dots);
+}
+
+function prevDiaporama() {
+    var slides = document.getElementById('diaporamaSlides');
+    var dots = document.getElementById('diaporamaDots');
+    if (!slides || !solidarityPosts.length) return;
+    currentDiaporamaIndex = (currentDiaporamaIndex - 1 + solidarityPosts.length) % solidarityPosts.length;
+    updateDiaporama(slides, dots);
+}
+
+function goToDiaporama(idx) {
+    var slides = document.getElementById('diaporamaSlides');
+    var dots = document.getElementById('diaporamaDots');
+    if (!slides) return;
+    currentDiaporamaIndex = idx;
+    updateDiaporama(slides, dots);
+    if (diaporamaInterval) {
+        clearInterval(diaporamaInterval);
+        diaporamaInterval = setInterval(nextDiaporama, 5000);
+    }
+}
+
+function updateDiaporama(slides, dots) {
+    slides.style.transform = 'translateX(-' + (currentDiaporamaIndex * 100) + '%)';
+    if (dots) {
+        var dotElements = dots.querySelectorAll('span');
+        dotElements.forEach(function (dot, idx) {
+            dot.style.background = idx === currentDiaporamaIndex ? '#e74c3c' : 'rgba(255,255,255,0.4)';
+            dot.style.transform = idx === currentDiaporamaIndex ? 'scale(1.3)' : 'scale(1)';
+        });
+    }
 }
 
 /* ============================================================
