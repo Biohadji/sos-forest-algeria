@@ -1,7 +1,7 @@
 {
-  "name": "SOS FOREST ALGERIA - نظام مراقبة حرائق الغابات",
-  "short_name": "SOS Forest",
-  "description": "تطبيق مراقبة ومنع حرائق الغابات في الجزائر",
+  "name": "PAW Emergency - خطة الطوارئ",
+  "short_name": "PAW",
+  "description": "خطة استعجالية لمواجهة حرائق المناطق الجبلية في الجزائر",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

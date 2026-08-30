@@ -6,44 +6,40 @@
   <meta name="theme-color" content="#e74c3c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="SOS Forest">
-  <meta name="description" content="SOS FOREST ALGERIA - تطبيق مراقبة حرائق الغابات في الجزائر">
-  <meta name="keywords" content="حرائق الغابات, الجزائر, مراقبة, SOS, forest fire, Algeria, PWA">
+  <meta name="apple-mobile-web-app-title" content="PAW Emergency">
+  <meta name="description" content="PAW - خطة استعجالية لمواجهة حرائق المناطق الجبلية في الجزائر">
+  <meta name="keywords" content="حرائق, جبال, الجزائر, طوارئ, PAW, emergency, fire, algeria, mountains">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="application-name" content="SOS Forest">
+  <meta name="application-name" content="PAW Emergency">
   <meta name="msapplication-TileColor" content="#e74c3c">
-  <meta name="msapplication-TileImage" content="icons/icon-192.png">
-  <meta name="msapplication-tooltip" content="SOS FOREST ALGERIA">
-  <title>SOS FOREST ALGERIA</title>
+  <title>PAW Emergency - خطة الطوارئ</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-  <link rel="apple-touch-icon-precomposed" href="icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="bg-animation"></div>
   <div class="particles"></div>
 
+  <!-- LOGIN PAGE -->
   <div class="login-container" id="loginPage">
     <div class="login-card">
-
       <div class="sos-logo">
         <div class="sos-icon">🔥</div>
-        <h1 class="sos-title">SOS FOREST ALGERIA</h1>
-        <p class="sos-subtitle">نظام مراقبة ومنع حرائق الغابات في الجزائر</p>
+        <h1 class="sos-title">PAW</h1>
+        <p class="sos-subtitle" data-i18n="app_subtitle">خطة استعجالية لمواجهة الحرائق في المناطق الجبلية</p>
         <button class="btn-install-login" id="installBtnLogin" onclick="installPWA()" style="display:none">
-          <i class="fas fa-mobile-alt"></i> تثبيت التطبيق على الهاتف
+          <i class="fas fa-mobile-alt"></i> <span data-i18n="install">تثبيت التطبيق</span>
         </button>
       </div>
 
-      <!-- نموذج تسجيل الدخول -->
-      <form id="loginForm">
+      <!-- Login Form -->
+      <form id="loginForm" novalidate>
         <div class="form-group">
-          <label>البريد الإلكتروني <span class="required">*</span></label>
+          <label data-i18n="login_email">البريد الإلكتروني</label>
           <div class="input-wrapper">
             <input type="email" id="loginEmail" class="form-input" placeholder="example@email.com" required>
             <span class="input-icon">📧</span>
@@ -51,28 +47,28 @@
         </div>
 
         <div class="form-group">
-          <label>كلمة المرور <span class="required">*</span></label>
+          <label data-i18n="login_password">كلمة المرور</label>
           <div class="input-wrapper">
-            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required minlength="6">
+            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••">
             <span class="input-icon">🔒</span>
           </div>
+          <small style="color:var(--text-muted); font-size:11px;">للدخول السريع: biohadji@gmail.com (بدون كلمة مرور)</small>
         </div>
 
-        <button type="submit" class="btn btn-primary">
-          <span>🔐</span>
-          <span>دخول التطبيق</span>
+        <button type="submit" class="btn btn-primary btn-block">
+          <span>🔐</span> <span data-i18n="login_btn">تسجيل الدخول</span>
         </button>
 
         <div style="text-align:center; margin-top:20px;">
-          <span style="color:var(--text-muted); font-size:14px;">ليس لديك حساب؟</span>
-          <button type="button" onclick="showRegister()" style="background:none; border:none; color:var(--color-primary); font-size:14px; font-weight:700; cursor:pointer; font-family:Cairo; text-decoration:underline;">سجل الآن</button>
+          <span style="color:var(--text-muted); font-size:14px;" data-i18n="login_register">ليس لديك حساب؟</span>
+          <button type="button" onclick="showRegister()" class="link-btn" data-i18n="login_register_link">سجل الآن</button>
         </div>
       </form>
 
-      <!-- نموذج التسجيل -->
+      <!-- Register Form -->
       <form id="registerForm" style="display:none;">
         <div class="form-group">
-          <label>البريد الإلكتروني <span class="required">*</span></label>
+          <label data-i18n="login_email">البريد الإلكتروني</label>
           <div class="input-wrapper">
             <input type="email" id="regEmail" class="form-input" placeholder="example@email.com" required>
             <span class="input-icon">📧</span>
@@ -80,7 +76,7 @@
         </div>
 
         <div class="form-group">
-          <label>رقم الهاتف (متصل بالواتساب) <span class="required">*</span></label>
+          <label data-i18n="register_phone">رقم الهاتف</label>
           <div class="input-wrapper">
             <input type="tel" id="regPhone" class="form-input" placeholder="05XX XXX XXX" pattern="0[5-7]\d{8}" required>
             <span class="input-icon">📱</span>
@@ -88,9 +84,9 @@
         </div>
 
         <div class="form-group">
-          <label>الولاية <span class="required">*</span></label>
+          <label data-i18n="register_wilaya">الولاية</label>
           <div class="input-wrapper">
-            <select id="regWilaya" class="form-select wilaya-select" required>
+            <select id="regWilaya" class="form-select" required>
               <option value="">-- اختر الولاية --</option>
             </select>
             <span class="input-icon">📍</span>
@@ -98,7 +94,7 @@
         </div>
 
         <div class="form-group">
-          <label>كلمة المرور <span class="required">*</span></label>
+          <label data-i18n="register_password">كلمة المرور</label>
           <div class="input-wrapper">
             <input type="password" id="regPassword" class="form-input" placeholder="6 أحرف على الأقل" required minlength="6">
             <span class="input-icon">🔒</span>
@@ -106,933 +102,421 @@
         </div>
 
         <div class="form-group">
-          <label>تأكيد كلمة المرور <span class="required">*</span></label>
+          <label data-i18n="register_confirm">تأكيد كلمة المرور</label>
           <div class="input-wrapper">
             <input type="password" id="regPasswordConfirm" class="form-input" placeholder="أعد إدخال كلمة المرور" required minlength="6">
             <span class="input-icon">🔒</span>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-success">
-          <span>📝</span>
-          <span>إنشاء حساب جديد</span>
+        <button type="submit" class="btn btn-success btn-block">
+          <span>📝</span> <span data-i18n="register_btn">إنشاء حساب</span>
         </button>
 
         <div style="text-align:center; margin-top:20px;">
-          <span style="color:var(--text-muted); font-size:14px;">لديك حساب بالفعل؟</span>
-          <button type="button" onclick="showLogin()" style="background:none; border:none; color:var(--color-primary); font-size:14px; font-weight:700; cursor:pointer; font-family:Cairo; text-decoration:underline;">سجّل الدخول</button>
+          <span style="color:var(--text-muted); font-size:14px;" data-i18n="register_login">لديك حساب بالفعل؟</span>
+          <button type="button" onclick="showLogin()" class="link-btn" data-i18n="register_login_link">سجّل الدخول</button>
         </div>
       </form>
 
-      <!-- شاشة تأكيد البريد -->
-      <div id="confirmScreen" style="display:none; text-align:center; padding:20px 0;">
-        <div style="font-size:64px; margin-bottom:16px;">📧</div>
-        <h3 style="font-size:20px; font-weight:800; margin-bottom:12px;">تأكيد البريد الإلكتروني</h3>
-        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:8px;">تم إرسال رابط التأكيد إلى</p>
-        <p id="confirmEmailDisplay" style="color:var(--color-primary); font-size:16px; font-weight:700; margin-bottom:20px;"></p>
-        <button onclick="showLogin()" class="btn btn-outline" style="width:100%;">
-          <span>←</span>
-          <span>العودة لتسجيل الدخول</span>
-        </button>
-      </div>
-
-      <!-- شاشة نجاح التسجيل -->
-      <div id="successScreen" style="display:none; text-align:center; padding:20px 0;">
-        <div style="font-size:64px; margin-bottom:16px;">🎉</div>
-        <h3 style="font-size:20px; font-weight:800; margin-bottom:12px; color:var(--color-success);">تم التسجيل بنجاح!</h3>
-        <p style="color:var(--text-secondary); font-size:14px; margin-bottom:20px;">يمكنك الآن تسجيل الدخول بحسابك</p>
-        <button onclick="showLogin()" class="btn btn-primary" style="width:100%;">
-          <span>🔐</span>
-          <span>تسجيل الدخول</span>
-        </button>
-      </div>
-
       <div class="login-footer">
-        <p>© 2026 SOS FOREST ALGERIA - جميع الحقوق محفوظة</p>
+        <p data-i18n="copyright">© 2026 PAW Emergency - جميع الحقوق محفوظة</p>
       </div>
     </div>
   </div>
 
-  <div class="dashboard" id="dashboard">
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard" style="display:none;">
+    <!-- TOPBAR -->
     <div class="topbar">
       <div class="topbar-right">
-        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
-          <span></span><span></span><span></span>
-        </button>
         <div class="topbar-brand">
           <div class="topbar-brand-icon">🔥</div>
-          <div class="topbar-brand-text">SOS <span>FOREST</span> ALGERIA</div>
+          <div class="topbar-brand-text">PAW <span>EMERGENCY</span></div>
         </div>
       </div>
       <div class="topbar-left">
-        <div class="lang-selector" id="langSelector">
+        <div class="lang-selector">
           <button class="lang-btn active" onclick="changeLang('ar')" data-lang="ar">🇩🇿 عربي</button>
           <button class="lang-btn" onclick="changeLang('fr')" data-lang="fr">🇫🇷 Français</button>
-          <button class="lang-btn" onclick="changeLang('en')" data-lang="en">🇬🇧 English</button>
         </div>
         <button class="btn-install" id="installBtn" onclick="installPWA()" style="display:none">
           <i class="fas fa-download"></i>
-          <span>تثبيت</span>
         </button>
         <div class="user-info">
           <div class="user-avatar" id="userAvatar">U</div>
-          <div>
-            <div class="user-name" id="userName">المستخدم</div>
-          </div>
+          <div class="user-name" id="userName">المستخدم</div>
         </div>
-        <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+        <button class="btn-logout" onclick="logout()">🚪</button>
       </div>
     </div>
 
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
-    <div class="mobile-menu" id="mobileMenu">
-      <div class="mobile-menu-header">
-        <div class="topbar-brand">
-          <div class="topbar-brand-icon">🔥</div>
-          <div class="topbar-brand-text">SOS <span>FOREST</span> ALGERIA</div>
-        </div>
-        <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
-      </div>
-      <div class="mobile-menu-items">
-        <button class="mobile-menu-item active" data-section="home" onclick="mobileMenuNavigate('home')">
-          <span class="menu-icon">🏠</span>
-          <span>الرئيسية</span>
-        </button>
-        <button class="mobile-menu-item" data-section="predictions" onclick="mobileMenuNavigate('predictions')">
-          <span class="menu-icon">🔥</span>
-          <span>وضعية الحرائق</span>
-        </button>
-        <button class="mobile-menu-item" data-section="reports" onclick="mobileMenuNavigate('reports')">
-          <span class="menu-icon">🚨</span>
-          <span>التبليغات عن الحرائق</span>
-        </button>
-        <button class="mobile-menu-item" data-section="shelters" onclick="mobileMenuNavigate('shelters')">
-          <span class="menu-icon">🏕️</span>
-          <span>الإيواء والمؤونة</span>
-        </button>
-        <button class="mobile-menu-item" data-section="solidarity" onclick="mobileMenuNavigate('solidarity')">
-          <span class="menu-icon">🤲</span>
-          <span>التضامن والإغاثة</span>
-        </button>
-        <button class="mobile-menu-item" data-section="ai-assistant" onclick="mobileMenuNavigate('ai-assistant')">
-          <span class="menu-icon">🤖</span>
-          <span>المساعد الذكي</span>
-        </button>
-        <button class="mobile-menu-item" data-section="admin" onclick="mobileMenuNavigate('admin')">
-          <span class="menu-icon">⚙️</span>
-          <span>لوحة التحكم</span>
-        </button>
-      </div>
-      <div class="mobile-menu-footer">
-        <button class="mobile-menu-logout" onclick="toggleMobileMenu(); logout();">🚪 خروج</button>
-      </div>
-    </div>
-
-    <div class="nav-tabs">
-      <button class="nav-tab active" data-section="home">
-        <span class="tab-icon">🏠</span>
-        <span>الرئيسية</span>
-      </button>
-      <button class="nav-tab" data-section="predictions">
-        <span class="tab-icon">🔥</span>
-        <span>وضعية الحرائق</span>
-      </button>
-      <button class="nav-tab" data-section="reports">
-        <span class="tab-icon">🚨</span>
-        <span>التبليغات عن الحرائق</span>
-        <span class="tab-badge" id="reportCount">0</span>
-      </button>
-      <button class="nav-tab" data-section="shelters">
-        <span class="tab-icon">🏕️</span>
-        <span>الإيواء والمؤونة</span>
-      </button>
-      <button class="nav-tab" data-section="solidarity">
-        <span class="tab-icon">🤲</span>
-        <span>التضامن والإغاثة</span>
-      </button>
-      <button class="nav-tab" data-section="ai-assistant">
-        <span class="tab-icon">🤖</span>
-        <span>المساعد الذكي</span>
-      </button>
-      <button class="nav-tab" data-section="admin">
-        <span class="tab-icon">⚙️</span>
-        <span>لوحة التحكم</span>
-      </button>
-    </div>
-
+    <!-- MAIN CONTENT -->
     <div class="main-content">
-
-      <div class="section" id="section-home">
-        <div style="text-align:center;padding:20px 0 30px;">
-          <h1 style="font-size:28px;font-weight:900;color:var(--text-primary);margin:0 0 8px;">
-            <span style="color:#e74c3c;">🔥 SOS</span> FOREST <span style="color:#00c853;">ALGERIA</span>
-          </h1>
-          <p style="font-size:14px;color:var(--text-secondary);margin:0;">نظام مراقبة ومنع حرائق الغابات في الجزائر</p>
-        </div>
-
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:30px;">
-          <div onclick="switchSection('predictions')" style="cursor:pointer;background:linear-gradient(135deg,rgba(231,76,60,0.15),rgba(231,76,60,0.02));border:1px solid rgba(231,76,60,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(231,76,60,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-            <div style="font-size:40px;margin-bottom:8px;">🔥</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">وضعية الحرائق</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">بيانات مباشرة من الأقمار</div>
-          </div>
-          <div onclick="switchSection('reports')" style="cursor:pointer;background:linear-gradient(135deg,rgba(255,152,0,0.15),rgba(255,152,0,0.02));border:1px solid rgba(255,152,0,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(255,152,0,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-            <div style="font-size:40px;margin-bottom:8px;">🚨</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">التبليغات</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">الإبلاغ عن حرائق الغابات</div>
-          </div>
-          <div onclick="switchSection('shelters')" style="cursor:pointer;background:linear-gradient(135deg,rgba(0,150,255,0.15),rgba(0,150,255,0.02));border:1px solid rgba(0,150,255,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(0,150,255,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-            <div style="font-size:40px;margin-bottom:8px;">🏕️</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">مراكز الإيواء</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">البحث والتسجيل</div>
-          </div>
-          <div onclick="switchSection('solidarity')" style="cursor:pointer;background:linear-gradient(135deg,rgba(156,39,176,0.15),rgba(156,39,176,0.02));border:1px solid rgba(156,39,176,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(156,39,176,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-            <div style="font-size:40px;margin-bottom:8px;">🤲</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">التضامن</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">حملات الإغاثة والتبرع</div>
-          </div>
-          <div onclick="switchSection('ai-assistant')" style="cursor:pointer;background:linear-gradient(135deg,rgba(0,200,83,0.15),rgba(0,200,83,0.02));border:1px solid rgba(0,200,83,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(0,200,83,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-            <div style="font-size:40px;margin-bottom:8px;">🤖</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">المساعد الذكي</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">اسأل المساعد</div>
-          </div>
-          <div onclick="switchSection('admin')" style="cursor:pointer;background:linear-gradient(135deg,rgba(100,100,100,0.15),rgba(100,100,100,0.02));border:1px solid rgba(100,100,100,0.25);border-radius:16px;padding:24px 16px;text-align:center;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(100,100,100,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-            <div style="font-size:40px;margin-bottom:8px;">⚙️</div>
-            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">لوحة التحكم</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">إدارة التطبيق</div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-bottom:24px;">
-          <div class="card-header">
-            <h3 class="card-title">🤲 أحدث حملات التضامن والإغاثة</h3>
-          </div>
-          <div class="card-body">
-            <div id="homeDiaporama" style="position:relative;width:100%;overflow:hidden;border-radius:12px;background:#0a1628;">
-              <div id="homeDiaporamaSlides" style="display:flex;transition:transform 0.5s ease;"></div>
-              <button onclick="prevHomeDiaporama()" style="position:absolute;top:50%;left:10px;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;z-index:10;">❮</button>
-              <button onclick="nextHomeDiaporama()" style="position:absolute;top:50%;right:10px;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;z-index:10;">❯</button>
-              <div id="homeDiaporamaDots" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-bottom:24px;">
-          <div class="card-header">
-            <h3 class="card-title">📞 أرقام الطوارئ</h3>
-          </div>
-          <div class="card-body">
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;">
-              <a href="tel:14" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.2);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                <div style="font-size:28px;">🔥</div>
-                <div style="font-size:20px;font-weight:900;color:#e74c3c;">14</div>
-                <div style="font-size:11px;color:var(--text-muted);">الإطفاء</div>
-              </a>
-              <a href="tel:17" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:rgba(0,150,255,0.1);border:1px solid rgba(0,150,255,0.2);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                <div style="font-size:28px;">👮</div>
-                <div style="font-size:20px;font-weight:900;color:#0096ff;">17</div>
-                <div style="font-size:11px;color:var(--text-muted);">الشرطة</div>
-              </a>
-              <a href="tel:1055" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.2);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                <div style="font-size:28px;">🚑</div>
-                <div style="font-size:20px;font-weight:900;color:#00c853;">1055</div>
-                <div style="font-size:11px;color:var(--text-muted);">الإسعاف</div>
-              </a>
-              <a href="tel:1414" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:rgba(255,152,0,0.1);border:1px solid rgba(255,152,0,0.2);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                <div style="font-size:28px;">🛡️</div>
-                <div style="font-size:20px;font-weight:900;color:#ff9800;">1414</div>
-                <div style="font-size:11px;color:var(--text-muted);">الحماية المدنية</div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section active" id="section-predictions">
+      
+      <!-- HOME SECTION -->
+      <div class="section active" id="section-home">
         <div class="section-header">
-          <h2 class="section-title"><span class="icon">🔥</span> وضعية الحرائق الآن</h2>
-          <p class="section-desc">مراقبة حرائق الغابات في الجزائر بالوقت الحقيقي — <b style="color:#e74c3c;">المصدر: FireMap.live (NASA FIRMS)</b></p>
-          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-            <span style="font-size:11px; color:var(--text-muted); background:rgba(16,185,129,0.08); padding:6px 10px; border-radius:8px; border:1px solid rgba(16,185,129,0.25);">🇩🇿 Algeria Only</span>
-            <span style="font-size:11px; color:var(--text-muted); background:rgba(231,76,60,0.08); padding:6px 10px; border-radius:8px; border:1px solid rgba(231,76,60,0.15);">🔥 المصدر: firemap.live</span>
-            <span id="lastUpdateTime" style="font-size:11px; color:var(--text-muted); background:rgba(0,150,255,0.08); padding:6px 10px; border-radius:8px; border:1px solid rgba(0,150,255,0.15);">⏱️ جاري التحديث...</span>
-          </div>
+          <h2 class="section-title"><span class="icon">🏠</span> <span data-i18n="nav_home">الرئيسية</span></h2>
+        </div>
+        
+        <div class="welcome-card">
+          <h1 data-i18n="home_title">مرحباً بك في تطبيق PAW</h1>
+          <p data-i18n="home_desc">خطة استعجالية لمواجهة حرائق المناطق الجبلية</p>
+          <p data-i18n="home_welcome">تطبيق شامل للت预案 والتخطيط لمواجهة حرائق الغابات في المناطق الجبلية الجزائرية</p>
         </div>
 
         <div class="stats-grid">
-          <div class="stat-card red">
+          <div class="stat-card red" onclick="switchSection('prediction')">
             <div class="stat-icon red">🔥</div>
-            <div class="stat-value" id="firmsCount">0</div>
-            <div class="stat-label">إجمالي الحرائق النشطة</div>
+            <div class="stat-value" data-i18n="stat_prediction">التنبؤ بالحرائق</div>
           </div>
-          <div class="stat-card red">
-            <div class="stat-icon red">🔴</div>
-            <div class="stat-value" id="statCritical">0</div>
-            <div class="stat-label">نشاط مرتفع (High)</div>
+          <div class="stat-card green" onclick="switchSection('shelters')">
+            <div class="stat-icon green">🏔️</div>
+            <div class="stat-value" data-i18n="stat_shelters">الملاجئ الجبلية</div>
           </div>
-          <div class="stat-card orange">
-            <div class="stat-icon orange">🟠</div>
-            <div class="stat-value" id="statHigh">0</div>
-            <div class="stat-label">نشاط متوسط (Medium)</div>
+          <div class="stat-card blue" onclick="switchSection('rescue')">
+            <div class="stat-icon blue">🚒</div>
+            <div class="stat-value" data-i18n="stat_rescue">عمليات الإنقاذ</div>
           </div>
-          <div class="stat-card blue">
-            <div class="stat-icon blue">🟢</div>
-            <div class="stat-value" id="statLow">0</div>
-            <div class="stat-label">نشاط منخفض (Low)</div>
+          <div class="stat-card orange" onclick="switchSection('emergency')">
+            <div class="stat-icon orange">🚨</div>
+            <div class="stat-value" data-i18n="stat_emergency">خطط الطوارئ</div>
           </div>
         </div>
 
-        <div class="stats-grid" style="margin-bottom:24px;">
-          <div class="stat-card" style="background:linear-gradient(135deg,rgba(231,76,60,0.1),rgba(231,76,60,0.02));border:1px solid rgba(231,76,60,0.2);">
-            <div class="stat-icon" style="color:#e74c3c;">📐</div>
-            <div class="stat-value" id="avgFrp">0</div>
-            <div class="stat-label">متوسط المساحة (هكتار)</div>
-          </div>
-          <div class="stat-card" style="background:linear-gradient(135deg,rgba(255,152,0,0.1),rgba(255,152,0,0.02));border:1px solid rgba(255,152,0,0.2);">
-            <div class="stat-icon" style="color:#ff9800;">📏</div>
-            <div class="stat-value" id="maxFrp">0</div>
-            <div class="stat-label">أكبر مساحة (هكتار)</div>
-          </div>
-          <div class="stat-card" style="background:linear-gradient(135deg,rgba(0,150,255,0.1),rgba(0,150,255,0.02));border:1px solid rgba(0,150,255,0.2);">
-            <div class="stat-icon" style="color:#0096ff;">🛰️</div>
-            <div class="stat-value"><span id="satViirs">0</span> / <span id="satModis">0</span></div>
-            <div class="stat-label">إجمالي عودات الأقمار / أقصى عودة</div>
-          </div>
-          <div class="stat-card" style="background:linear-gradient(135deg,rgba(156,39,176,0.1),rgba(156,39,176,0.02));border:1px solid rgba(156,39,176,0.2);">
-            <div class="stat-icon" style="color:#9c27b0;">🗺️</div>
-            <div class="stat-value" id="statCritical">0</div>
-            <div class="stat-label">الولايات المتضررة</div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-bottom:24px;">
+        <!-- Mountain Zones Quick View -->
+        <div class="card" style="margin-top:24px;">
           <div class="card-header">
-            <h3 class="card-title">🔥 الولايات الأكثر تضرراً</h3>
-          </div>
-          <div class="card-body" id="topWilayas">
-            <div style="text-align:center;color:var(--text-muted);font-size:12px;padding:8px;">جاري التحميل...</div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-bottom:24px;">
-          <div class="card-header">
-            <h3 class="card-title">🌍 مواقع رصد الحرائق العالمية (الأكثر دقة)</h3>
+            <h3 class="card-title">🏔️ المناطق الجبلية</h3>
           </div>
           <div class="card-body">
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
-              <a href="https://firms.modaps.eosdis.nasa.gov/map/#d:24hrs;@28.03,1.65,5z" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,0,0,0.3);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 15px rgba(255,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                <div style="width:45px;height:45px;background:rgba(255,0,0,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">🛰️</div>
-                <div>
-                  <div style="font-size:13px;font-weight:700;color:#ff4444;">NASA FIRMS</div>
-                  <div style="font-size:10px;color:#999;">الأكثر دقة عالمياً</div>
-                </div>
-              </a>
-
-              <a href="https://www.firemap.live/?lat=28.03&lng=1.65&zoom=5" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,100,0,0.3);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 15px rgba(255,100,0,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                <div style="width:45px;height:45px;background:rgba(255,100,0,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">🔥</div>
-                <div>
-                  <div style="font-size:13px;font-weight:700;color:#ff6400;">FireMap.live</div>
-                  <div style="font-size:10px;color:#999;">تفاعلي وسهل الاستخدام</div>
-                </div>
-              </a>
-
-              <a href="https://effis.jrc.ec.europa.eu/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,200,100,0.3);border-radius:12px;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 15px rgba(0,200,100,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                <div style="width:45px;height:45px;background:rgba(0,200,100,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">🇪🇺</div>
-                <div>
-                  <div style="font-size:13px;font-weight:700;color:#00c864;">EFFIS</div>
-                  <div style="font-size:10px;color:#999;">نظام أوروبي</div>
-                </div>
-              </a>
-            </div>
+            <div class="zones-grid" id="homeZonesGrid"></div>
           </div>
+        </div>
+      </div>
+
+      <!-- PREDICTION SECTION -->
+      <div class="section" id="section-prediction">
+        <div class="section-header">
+          <h2 class="section-title"><span class="icon">🔥</span> <span data-i18n="prediction_title">التنبؤ بالحرائق</span></h2>
+          <p class="section-desc" data-i18n="prediction_desc">نظام ذكي للتنبؤ بمخاطر الحرائق في المناطق الجبلية</p>
         </div>
 
         <div class="card" style="margin-bottom:24px;">
-          <div class="card-header" style="flex-wrap:wrap; gap:8px;">
-            <h3 class="card-title">🔥 خريطة حرائق الجزائر <span style="font-size:11px; font-weight:600; color:#e74c3c; background:rgba(231,76,60,0.1); padding:3px 8px; border-radius:20px; border:1px solid rgba(231,76,60,0.2);">🔥 FireMap.live</span></h3>
-            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-              <button id="firemapRefreshBtn" onclick="refreshFiremapData()" class="btn btn-sm btn-primary" style="font-size:12px; font-weight:700; background:#e74c3c; border-color:#e74c3c; box-shadow:0 2px 8px rgba(231,76,60,0.3);">
-                <span>🔄</span> تحيين البيانات
-              </button>
-              <a href="https://www.firemap.live/?lat=28.03&lng=1.65&zoom=5" target="_blank" class="btn btn-sm btn-outline" style="font-size:12px;">
-                <span>🌍</span> فتح في نافذة جديدة
-              </a>
+          <div class="card-header">
+            <h3 class="card-title">🎯 <span data-i18n="prediction_select_zone">اختر المنطقة الجبلية</span></h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <select id="predictionZoneSelect" class="form-select">
+                <option value="">-- اختر منطقة --</option>
+              </select>
             </div>
+            <button onclick="analyzeZone()" class="btn btn-primary btn-block">
+              <span>🔍</span> <span data-i18n="prediction_analyze">تحليل المخاطر</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="predictionResult" style="display:none;"></div>
+
+        <!-- Live Fire Map -->
+        <div class="card" style="margin-top:24px;">
+          <div class="card-header">
+            <h3 class="card-title">🌍 خريطة الحرائق الحية</h3>
           </div>
           <div class="card-body" style="padding:0;">
-            <div style="position:relative;width:100%;padding-bottom:75%;height:0;overflow:hidden;border-radius:0 0 12px 12px;">
+            <div style="position:relative;width:100%;padding-bottom:75%;height:0;overflow:hidden;">
               <iframe 
-                id="firemapIframe"
-                src="https://www.firemap.live/?lat=28.03&lng=1.65&zoom=5" 
-                style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:0 0 12px 12px;" 
+                src="https://www.firemap.live/?lat=36.75&lng=3.06&zoom=6" 
+                style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" 
                 allowfullscreen
-                loading="lazy"
-                title="خريطة حرائق الجزائر - FireMap.live">
+                loading="lazy">
               </iframe>
             </div>
           </div>
         </div>
-
-        <div class="card" style="margin-bottom:24px;">
-          <div class="card-header">
-            <h3 class="card-title">🔥 قائمة الحرائق النشطة في الجزائر من FireMap.live</h3>
-          </div>
-          <div class="card-body">
-            <div class="alerts-list" id="heatmapPoints">
-              <div style="text-align:center; padding:40px; color:var(--text-muted);">
-                <div class="spinner"></div>
-                <p style="margin-top:12px;">جاري تحميل بيانات الحرائق النشطة من FireMap.live...</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
-      <div class="section" id="section-reports">
+      <!-- SHELTERS SECTION -->
+      <div class="section" id="section-shelters">
         <div class="section-header">
-          <h2 class="section-title"><span class="icon">🚨</span> التبليغات عن الحرائق</h2>
-          <p class="section-desc">إرسال تبليغات فورية عن حرائق الغابات إلى المصالح المعنية</p>
+          <h2 class="section-title"><span class="icon">🏔️</span> <span data-i18n="shelters_title">الملاجئ الجبلية</span></h2>
+          <p class="section-desc" data-i18n="shelters_desc">دليل شامل لملاجئ المناطق الجبلية وطرق البناء الآمنة</p>
         </div>
 
         <div class="card" style="margin-bottom:24px;">
           <div class="card-header">
-            <h3 class="card-title">📝 نموذج التبليغ</h3>
+            <h3 class="card-title">📍 <span data-i18n="prediction_select_zone">اختر المنطقة الجبلية</span></h3>
           </div>
           <div class="card-body">
-            <form id="reportForm" class="report-form">
-              <div class="form-group">
-                <label>رقم الهاتف <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <input type="tel" id="reportPhone" class="form-input" placeholder="05XX XXX XXX" pattern="0[5-7]\d{8}" required>
-                  <span class="input-icon">📱</span>
-                </div>
-              </div>
+            <div class="zones-list" id="sheltersZonesList"></div>
+          </div>
+        </div>
 
-              <div class="form-group">
-                <label>الولاية <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <select id="reportWilaya" class="form-select wilaya-select" required>
-                    <option value="">-- اختر الولاية --</option>
-                  </select>
-                  <span class="input-icon">📍</span>
-                </div>
-              </div>
+        <div id="shelterContent" style="display:none;"></div>
+      </div>
 
-              <div class="form-group">
-                <label>اسم الحي <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <input type="text" id="reportNeighborhood" class="form-input" placeholder="اسم الحي" required>
-                  <span class="input-icon">🏠</span>
-                </div>
-              </div>
+      <!-- RESCUE SECTION -->
+      <div class="section" id="section-rescue">
+        <div class="section-header">
+          <h2 class="section-title"><span class="icon">🚒</span> <span data-i18n="rescue_title">عمليات الإنقاذ</span></h2>
+          <p class="section-desc" data-i18n="rescue_desc">تسريع عمليات الإنقاذ وإخماد الحرائق وفق التطورات العلمية والتكنولوجية</p>
+        </div>
 
-              <div class="form-group">
-                <label>البلدية</label>
-                <div class="input-wrapper">
-                  <input type="text" id="reportMunicipality" class="form-input" placeholder="اسم البلدية (اختياري)">
-                  <span class="input-icon">🏘️</span>
-                </div>
-              </div>
-
-              <div class="form-group full-width">
-                <label>موقع الحريق <span class="required">*</span></label>
-                <button type="button" id="gpsBtn" class="gps-btn" onclick="getCurrentPosition()">
-                  <span>📍</span>
-                  <span>تحديد موقعي GPS</span>
-                </button>
-                <div class="gps-coords" id="gpsCoords"></div>
-                <input type="hidden" id="reportLat" value="" required>
-                <input type="hidden" id="reportLng" value="" required>
-              </div>
-
-              <div class="form-group full-width">
-                <label>صورة الموقع (اختياري)</label>
-                <div class="image-upload">
-                  <input type="file" id="reportImage" accept="image/*" capture="environment">
-                  <div class="upload-icon">📷</div>
-                  <div class="upload-text" id="uploadText">اضغط لتحميل صورة الموقع</div>
-                  <div class="upload-hint">يمكنك التقاط صورة بالكاميرا أو اختيار من المعرض</div>
-                </div>
-                <img id="reportImagePreview" class="image-preview" alt="معاينة الصورة" style="display:none">
-              </div>
-
-              <div class="form-group">
-                <label>التاريخ</label>
-                <div class="input-wrapper">
-                  <input type="date" id="reportDate" class="form-input">
-                  <span class="input-icon">📅</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>الساعة</label>
-                <div class="input-wrapper">
-                  <input type="time" id="reportTime" class="form-input">
-                  <span class="input-icon">⏰</span>
-                </div>
-              </div>
-
-              <div class="form-group full-width">
-                <button type="submit" class="btn btn-primary">
-                  <span>📤</span>
-                  <span>إرسال التبليغ</span>
-                </button>
-              </div>
-            </form>
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-icon blue">🚁</div>
+            <div class="stat-value">12</div>
+            <div class="stat-label">طائرة إطفاء</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon green">🚒</div>
+            <div class="stat-value">45</div>
+            <div class="stat-label">شاحنة إطفاء</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon orange">👨‍🚒</div>
+            <div class="stat-value">500+</div>
+            <div class="stat-label">رجل إطفاء</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon red">⏱️</div>
+            <div class="stat-value">15 دقيقة</div>
+            <div class="stat-label">متوسط وقت الاستجابة</div>
           </div>
         </div>
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">🔔 آخر التبليغات</h3>
+            <h3 class="card-title">🚨 بروتوكول الإنقاذ</h3>
           </div>
           <div class="card-body">
-            <div class="alerts-list" id="alertsList"></div>
+            <div class="protocols-list">
+              <div class="protocol-item">
+                <h4>المرحلة الأولى: الإنذار المبكر</h4>
+                <ol>
+                  <li>رصد بداية الحريق (0-5 دقائق)</li>
+                  <li>تنبيه مركز الأوامر (5-10 دقائق)</li>
+                  <li>نشر الفرق الميدانية (10-15 دقيقة)</li>
+                  <li>تقييم الحجم والاتجاه (15-20 دقيقة)</li>
+                </ol>
+              </div>
+              <div class="protocol-item">
+                <h4>المرحلة الثانية: الإخلاء</h4>
+                <ol>
+                  <li>بدء إخلاء المناطق المهددة (20-30 دقيقة)</li>
+                  <li>إرشاد السكان إلى أماكن آمنة (30-45 دقيقة)</li>
+                  <li>إغلاق الطرق المهددة (45-60 دقيقة)</li>
+                </ol>
+              </div>
+              <div class="protocol-item">
+                <h4>المرحلة الثالثة: الإطفاء</h4>
+                <ol>
+                  <li>نشر طائرات الإطفاء (90-120 دقيقة)</li>
+                  <li>إنشاء خطوط إطفاء (120-180 دقيقة)</li>
+                  <li>إخماد الحريق الرئيسي (180-240 دقيقة)</li>
+                </ol>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="section" id="section-shelters">
+      <!-- EMERGENCY SECTION -->
+      <div class="section" id="section-emergency">
         <div class="section-header">
-          <h2 class="section-title"><span class="icon">🏕️</span> الإيواء والمؤونة</h2>
-          <p class="section-desc">تحديد أماكن الإيواء والمؤونة لمساعدة العائلات المنكوبة</p>
+          <h2 class="section-title"><span class="icon">🚨</span> <span data-i18n="emergency_title">خطط الطوارئ</span></h2>
+          <p class="section-desc" data-i18n="emergency_desc">خطط استعجالية شاملة لمواجهة الحرائق في المناطق الجبلية</p>
         </div>
 
-        <div class="card" style="margin-bottom:24px;">
+        <div class="emergency-contacts">
+          <h3>📞 <span data-i18n="emergency_contacts">أرقام الطوارئ</span></h3>
+          <div class="contacts-grid">
+            <a href="tel:14" class="contact-card fire">
+              <span class="contact-icon">🔥</span>
+              <span class="contact-name" data-i18n="emergency_fire">إطفاء الحرائق</span>
+              <span class="contact-number">14</span>
+            </a>
+            <a href="tel:15" class="contact-card medical">
+              <span class="contact-icon">🏥</span>
+              <span class="contact-name" data-i18n="emergency_medical">إسعاف أولي</span>
+              <span class="contact-number">15</span>
+            </a>
+            <a href="tel:17" class="contact-card police">
+              <span class="contact-icon">👮</span>
+              <span class="contact-name" data-i18n="emergency_police">الشرطة</span>
+              <span class="contact-number">17</span>
+            </a>
+            <a href="tel:1021" class="contact-card civil">
+              <span class="contact-icon">🛡️</span>
+              <span class="contact-name" data-i18n="emergency_civil">الدفاع المدني</span>
+              <span class="contact-number">1021</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:24px;">
           <div class="card-header">
-            <h3 class="card-title">📝 تسجيل مركز الإيواء</h3>
+            <h3 class="card-title">📋 خطط الطوارئ حسب المرحلة</h3>
           </div>
           <div class="card-body">
-            <form id="shelterForm" class="report-form">
-              <div class="form-group">
-                <label>اسم المركز <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <input type="text" id="shelterName" class="form-input" placeholder="اسم مركز الإيواء" required>
-                  <span class="input-icon">🏢</span>
+            <div class="emergency-phases">
+              <div class="phase-item">
+                <div class="phase-number">1</div>
+                <div class="phase-content">
+                  <h4>الإنذار المبكر</h4>
+                  <p>رصد الحرائق والتنبيه المبكر للسكان</p>
                 </div>
               </div>
-
-              <div class="form-group">
-                <label>الولاية <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <select id="shelterWilaya" class="form-select wilaya-select" required>
-                    <option value="">-- اختر الولاية --</option>
-                  </select>
-                  <span class="input-icon">📍</span>
+              <div class="phase-item">
+                <div class="phase-number">2</div>
+                <div class="phase-content">
+                  <h4>الإخلاء</h4>
+                  <p>إخلاء المناطق المهددة بشكل منظم</p>
                 </div>
               </div>
-
-              <div class="form-group">
-                <label>البلدية <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <input type="text" id="shelterMunicipality" class="form-input" placeholder="اسم البلدية" required>
-                  <span class="input-icon">🏘️</span>
+              <div class="phase-item">
+                <div class="phase-number">3</div>
+                <div class="phase-content">
+                  <h4>الإنقاذ</h4>
+                  <p>إنقاذ الأشخاص العالقين</p>
                 </div>
               </div>
-
-              <div class="form-group">
-                <label>رقم هاتف المركز <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <input type="tel" id="shelterPhone" class="form-input" placeholder="0XX XX XX XX" required>
-                  <span class="input-icon">📞</span>
+              <div class="phase-item">
+                <div class="phase-number">4</div>
+                <div class="phase-content">
+                  <h4>الإغاثة</h4>
+                  <p>تقديم المساعدات للمتضررين</p>
                 </div>
               </div>
-
-              <div class="form-group full-width">
-                <label>موقع المركز <span class="required">*</span></label>
-                <button type="button" id="shelterGpsBtn" class="gps-btn">
-                  <span>📍</span>
-                  <span>تحديد موقعي GPS</span>
-                </button>
-                <div class="gps-coords" id="shelterGpsCoords"></div>
-                <input type="hidden" id="shelterLat" value="">
-                <input type="hidden" id="shelterLng" value="">
-              </div>
-
-              <div class="form-group full-width">
-                <label>صورة المركز</label>
-                <div class="image-upload">
-                  <input type="file" id="shelterImage" accept="image/*" capture="environment">
-                  <div class="upload-icon">📷</div>
-                  <div class="upload-text" id="shelterUploadText">اضغط لتحميل صورة المركز</div>
-                  <div class="upload-hint">يمكنك التقاط صورة بالكاميرا أو اختيار من المعرض</div>
-                </div>
-                <img id="shelterImagePreview" class="image-preview" alt="معاينة الصورة" style="display:none">
-              </div>
-
-              <div class="form-group full-width">
-                <button type="submit" class="btn btn-success">
-                  <span>📤</span>
-                  <span>تسجيل المركز</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <div class="section" id="section-solidarity">
-        <div class="section-header">
-          <h2 class="section-title"><span class="icon">🤲</span> التضامن والإغاثة</h2>
-          <p class="section-desc">الجمعيات الخيرية والمؤسسات والمنظمات التي تنظم عمليات التضامن وجمع التبرعات</p>
-        </div>
-
-        <div class="card" style="margin-bottom:24px;">
-          <div class="card-header">
-            <h3 class="card-title">📝 نشر حملة تضامن</h3>
-          </div>
-          <div class="card-body">
-            <form id="solidarityForm" class="report-form">
-              <div class="form-group">
-                <label>اسم الجمعية / المؤسسة <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <input type="text" id="solidarityOrgName" class="form-input" placeholder="مثال: جمعية الإغاثة الإنسانية" required>
-                  <span class="input-icon">🏢</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>نوع الحملة <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <select id="solidarityType" class="form-select" required>
-                    <option value="">-- اختر نوع الحملة --</option>
-                    <option value="donation">💰 جمع التبرعات</option>
-                    <option value="relief">📦 عمليات الإغاثة</option>
-                    <option value="solidarity">🤲 حملات التضامن</option>
-                    <option value="medical">🏥 مساعدة طبية</option>
-                    <option value="shelter">🏕️ إيواء المتضررين</option>
-                    <option value="food">🍎 توزيع الغذاء</option>
-                    <option value="other">📋 أخرى</option>
-                  </select>
-                  <span class="input-icon">📋</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>الولاية <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <select id="solidarityWilaya" class="form-select wilaya-select" required>
-                    <option value="">-- اختر الولاية --</option>
-                  </select>
-                  <span class="input-icon">📍</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>وصف الحملة <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <textarea id="solidarityDescription" class="form-input" rows="3" placeholder="وصف مختصر للحملة والهدف منها..." required></textarea>
-                  <span class="input-icon">📝</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>رقم الهاتف <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <input type="tel" id="solidarityPhone" class="form-input" placeholder="05XX XXX XXX" pattern="0[5-7]\d{8}" required>
-                  <span class="input-icon">📞</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>رقم الواتساب</label>
-                <div class="input-wrapper">
-                  <input type="tel" id="solidarityWhatsApp" class="form-input" placeholder="رقم الواتساب (اختياري)" pattern="0[5-7]\d{8}">
-                  <span class="input-icon">💬</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>رابط صفحة الفيسبوك</label>
-                <div class="input-wrapper">
-                  <input type="url" id="solidarityFacebook" class="form-input" placeholder="https://facebook.com/...">
-                  <span class="input-icon">📘</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>تاريخ البداية <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <input type="date" id="solidarityStartDate" class="form-input" required>
-                  <span class="input-icon">📅</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>تاريخ النهاية</label>
-                <div class="input-wrapper">
-                  <input type="date" id="solidarityEndDate" class="form-input">
-                  <span class="input-icon">📅</span>
-                </div>
-              </div>
-
-              <div class="form-group full-width">
-                <label>صورة الحملة</label>
-                <div class="image-upload">
-                  <input type="file" id="solidarityImage" accept="image/*" capture="environment">
-                  <div class="upload-icon">📷</div>
-                  <div class="upload-text" id="solidarityUploadText">اضغط لتحميل صورة الحملة</div>
-                  <div class="upload-hint">يمكنك التقاط صورة بالكاميرا أو اختيار من المعرض</div>
-                </div>
-                <img id="solidarityImagePreview" class="image-preview" alt="معاينة الصورة" style="display:none">
-              </div>
-
-              <div class="form-group full-width">
-                <button type="submit" class="btn btn-success">
-                  <span>📤</span>
-                  <span>نشر الحملة</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <div class="card" style="margin-bottom:24px;">
-          <div class="card-header">
-            <h3 class="card-title">🤝 حملات التضامن النشطة</h3>
-          </div>
-          <div class="card-body">
-            <div id="solidarityDiaporama" style="position:relative;width:100%;overflow:hidden;border-radius:12px;background:#0a1628;">
-              <div id="diaporamaSlides" style="display:flex;transition:transform 0.5s ease;"></div>
-              <button onclick="prevDiaporama()" style="position:absolute;top:50%;left:10px;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;z-index:10;">❮</button>
-              <button onclick="nextDiaporama()" style="position:absolute;top:50%;right:10px;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;z-index:10;">❯</button>
-              <div id="diaporamaDots" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10;"></div>
-            </div>
-            <div class="alerts-list" id="solidarityList" style="margin-top:16px;"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section" id="section-ai-assistant">
-        <div class="section-header">
-          <h2 class="section-title"><span class="icon">🤖</span> المساعد الذكي</h2>
-          <p class="section-desc">مساعد بالذكاء الاصطناعي للإجابة على أسئلتك حول الحرائق في الجزائر</p>
-        </div>
-
-        <div class="card" style="margin-bottom:0;height:calc(100vh - 220px);min-height:500px;display:flex;flex-direction:column;">
-          <div class="card-header" style="border-bottom:1px solid var(--border-glass);flex-shrink:0;">
-            <div style="display:flex;align-items:center;gap:10px;flex:1;">
-              <div style="width:40px;height:40px;background:linear-gradient(135deg,#00c853,#1a2a3a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid #00c853;">🤖</div>
-              <div>
-                <div style="font-size:14px;font-weight:700;color:var(--text-primary);">مساعد SOS FOREST ALGERIA</div>
-                <div style="font-size:11px;color:#00c853;">● متصل الآن</div>
-              </div>
-            </div>
-            <button onclick="showAiSettings()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text-secondary);" title="إعدادات المساعد">⚙️</button>
-          </div>
-
-          <div id="aiChatMessages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;">
-            <div style="display:flex;gap:8px;align-items:flex-start;">
-              <div style="width:32px;height:32px;background:linear-gradient(135deg,#00c853,#1a2a3a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🤖</div>
-              <div style="max-width:80%;padding:12px 16px;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.2);border-radius:12px;border-top-right-radius:4px;">
-                <div style="font-size:13px;line-height:1.8;color:var(--text-primary);">
-                  مرحباً! أنا مساعدك الذكي في تطبيق <b style="color:#e74c3c;">SOS FOREST ALGERIA</b> 🇩🇿<br><br>
-                  يمكنني مساعدتك في:<br>
-                  🔥 معلومات عن الحرائق في الجزائر<br>
-                  🗺️ المناطق المتضررة والطرق المقطوعة<br>
-                  📞 أرقام الطوارئ والتواصل مع أجهزة الدولة<br>
-                  🏕️ مراكز الإيواء والمؤونة<br>
-                  🤲 الجمعيات والمنظمات والحملات<br>
-                  💡 نصائح السلامة من الحرائق<br><br>
-                  <b>اسألني أي سؤال وسأحاول مساعدتك!</b>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div style="padding:12px 16px;border-top:1px solid var(--border-glass);flex-shrink:0;">
-            <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
-              <button onclick="aiQuickQuestion('ما هي أرقام الطوارئ في الجزائر؟')" style="padding:6px 12px;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.2);border-radius:20px;font-size:11px;color:#e74c3c;cursor:pointer;font-family:Cairo;">📞 أرقام الطوارئ</button>
-              <button onclick="aiQuickQuestion('كيف أبلّغ عن حريق؟')" style="padding:6px 12px;background:rgba(255,152,0,0.1);border:1px solid rgba(255,152,0,0.2);border-radius:20px;font-size:11px;color:#ff9800;cursor:pointer;font-family:Cairo;">🔥 التبليغ عن حريق</button>
-              <button onclick="aiQuickQuestion('ما هي نصائح السلامة من الحرائق؟')" style="padding:6px 12px;background:rgba(0,150,255,0.1);border:1px solid rgba(0,150,255,0.2);border-radius:20px;font-size:11px;color:#0096ff;cursor:pointer;font-family:Cairo;">💡 نصائح السلامة</button>
-              <button onclick="aiQuickQuestion('كيف أساعد المتضررين؟')" style="padding:6px 12px;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.2);border-radius:20px;font-size:11px;color:#00c853;cursor:pointer;font-family:Cairo;">🤲 المساهمة</button>
-            </div>
-            <div style="display:flex;gap:8px;">
-              <input type="text" id="aiChatInput" class="form-input" placeholder="اكتب سؤالك هنا..." style="flex:1;border-radius:24px;padding:12px 16px;" onkeypress="if(event.key==='Enter')sendAiMessage()">
-              <button onclick="sendAiMessage()" style="padding:12px 20px;background:linear-gradient(135deg,#00c853,#00a844);color:white;border:none;border-radius:24px;cursor:pointer;font-family:Cairo;font-weight:700;font-size:13px;">إرسال</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="section" id="section-admin">
+      <!-- WEATHER SECTION -->
+      <div class="section" id="section-weather">
         <div class="section-header">
-          <h2 class="section-title"><span class="icon">⚙️</span> لوحة التحكم</h2>
-          <p class="section-desc">مراقبة وإدارة جميع التبليغات ومراكز الإيواء</p>
+          <h2 class="section-title"><span class="icon">🌤️</span> <span data-i18n="weather_title">الطقس والظروف الجوية</span></h2>
+          <p class="section-desc" data-i18n="weather_desc">مراقبة الظروف الجوية المؤثرة على حرائق الغابات</p>
         </div>
 
-        <div class="stats-grid" style="margin-bottom:24px;">
+        <div class="stats-grid">
           <div class="stat-card red">
-            <div class="stat-icon red">📊</div>
-            <div class="stat-value" id="adminTotalReports">0</div>
-            <div class="stat-label">إجمالي التبليغات</div>
-          </div>
-          <div class="stat-card orange">
-            <div class="stat-icon orange">⏳</div>
-            <div class="stat-value" id="adminActiveReports">0</div>
-            <div class="stat-label">تبليغات قيد المتابعة</div>
-          </div>
-          <div class="stat-card green">
-            <div class="stat-icon green">✅</div>
-            <div class="stat-value" id="adminResolvedReports">0</div>
-            <div class="stat-label">تبليغات تم حلها</div>
+            <div class="stat-icon red">🌡️</div>
+            <div class="stat-value" id="currentTemp">--°C</div>
+            <div class="stat-label">درجة الحرارة</div>
           </div>
           <div class="stat-card blue">
-            <div class="stat-icon blue">🏕️</div>
-            <div class="stat-value" id="adminTotalShelters">0</div>
-            <div class="stat-label">مراكز الإيواء</div>
-          </div>
-          <div class="stat-card red">
-            <div class="stat-icon red">🤲</div>
-            <div class="stat-value" id="adminTotalSolidarity">0</div>
-            <div class="stat-label">حملات التضامن</div>
-          </div>
-          <div class="stat-card orange">
-            <div class="stat-icon orange">🔥</div>
-            <div class="stat-value" id="adminActiveFires">0</div>
-            <div class="stat-label">الحرائق النشطة</div>
+            <div class="stat-icon blue">💧</div>
+            <div class="stat-value" id="currentHumidity">--%</div>
+            <div class="stat-label">الرطوبة</div>
           </div>
           <div class="stat-card green">
-            <div class="stat-icon green">👥</div>
-            <div class="stat-value" id="adminTotalUsers">0</div>
-            <div class="stat-label">المستخدمون</div>
+            <div class="stat-icon green">💨</div>
+            <div class="stat-value" id="currentWind">-- km/h</div>
+            <div class="stat-label">سرعة الرياح</div>
           </div>
-          <div class="stat-card blue">
-            <div class="stat-icon blue">🤖</div>
-            <div class="stat-value" id="adminAiQuestions">0</div>
-            <div class="stat-label">أسئلة المساعد</div>
-          </div>
-        </div>
-
-        <div class="admin-grid">
-          <div class="card admin-full">
-            <div class="card-header">
-              <h3 class="card-title">🗺️ خريطة التبليغات والمراكز</h3>
-            </div>
-            <div class="card-body">
-              <div class="map-container" id="adminMap"></div>
-              <div class="heatmap-legend" style="margin-top:16px;">
-                <span class="legend-title">المفتاح:</span>
-                <div style="display:flex; gap:20px; align-items:center;">
-                  <span style="display:flex; align-items:center; gap:6px; font-size:13px;">
-                    <span style="width:12px;height:12px;background:#e74c3c;border-radius:50%;display:inline-block;"></span>
-                    مواقع الحرائق
-                  </span>
-                  <span style="display:flex; align-items:center; gap:6px; font-size:13px;">
-                    <span style="width:12px;height:12px;background:#27ae60;border-radius:50%;display:inline-block;"></span>
-                    مراكز الإيواء
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">🔔 التبليغات الحديثة</h3>
-            </div>
-            <div class="card-body">
-              <div class="alerts-list" id="adminAlertsList"></div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">📈 إحصائيات الأداء</h3>
-            </div>
-            <div class="card-body">
-              <div style="display:flex; flex-direction:column; gap:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
-                  <span style="font-size:14px; color:var(--text-secondary);">متوسط وقت الاستجابة</span>
-                  <span style="font-size:16px; font-weight:700; color:var(--info);">15 دقيقة</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
-                  <span style="font-size:14px; color:var(--text-secondary);">نسبة التبليغات المؤكدة</span>
-                  <span style="font-size:16px; font-weight:700; color:var(--color-success);">78%</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
-                  <span style="font-size:14px; color:var(--text-secondary);">الولايات الأكثر تأثراً</span>
-                  <span style="font-size:16px; font-weight:700; color:var(--warning);">7 ولايات</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px;">
-                  <span style="font-size:14px; color:var(--text-secondary);">عدد مراكز الإيواء النشطة</span>
-                  <span style="font-size:16px; font-weight:700; color:var(--color-primary);">12 مركز</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card admin-full">
-            <div class="card-header">
-              <h3 class="card-title">🤲 حملات التضامن والإغاثة</h3>
-            </div>
-            <div class="card-body">
-              <div class="alerts-list" id="adminSolidarityList">
-                <div style="text-align:center;padding:40px;color:var(--text-muted);"><div style="font-size:48px;margin-bottom:16px;">🤲</div><p>لا توجد حملات تضامن مسجلة</p></div>
-              </div>
-            </div>
+          <div class="stat-card orange">
+            <div class="stat-icon orange">☀️</div>
+            <div class="stat-value" id="currentUV">--</div>
+            <div class="stat-label">مؤشر الأشعة فوق البنفسجية</div>
           </div>
         </div>
+      </div>
+
+      <!-- GUIDE SECTION -->
+      <div class="section" id="section-guide">
+        <div class="section-header">
+          <h2 class="section-title"><span class="icon">📚</span> <span data-i18n="guide_title">دليل السلامة من الحرائق</span></h2>
+          <p class="section-desc" data-i18n="guide_desc">نصائح وإرشادات للسلامة من حرائق الغابات في المناطق الجبلية</p>
+        </div>
+
+        <div id="guideContent"></div>
       </div>
 
     </div>
-  </div>
 
-  <div id="pointModal" class="modal-overlay">
-    <div class="modal" style="max-width:420px;">
-      <div class="modal-header">
-        <h3 class="modal-title" id="pointModalTitle">معلومات النقطة</h3>
-        <button class="modal-close" onclick="closePointModal()">✕</button>
-      </div>
-      <div class="modal-body" id="pointModalBody"></div>
-      <div class="modal-footer">
-        <button class="btn btn-info btn-sm" id="pointItineraryBtn" target="_blank">
-          <span>🗺️</span> فتح المسار
-        </button>
-        <button class="btn btn-outline btn-sm" onclick="closePointModal()">إغلاق</button>
-      </div>
+    <!-- BOTTOM NAV -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="home">
+        <span class="tab-icon">🏠</span>
+        <span data-i18n="nav_home">الرئيسية</span>
+      </button>
+      <button class="nav-tab" data-section="prediction">
+        <span class="tab-icon">🔥</span>
+        <span data-i18n="nav_prediction">التنبؤ</span>
+      </button>
+      <button class="nav-tab" data-section="shelters">
+        <span class="tab-icon">🏔️</span>
+        <span data-i18n="nav_shelters">الملاجئ</span>
+      </button>
+      <button class="nav-tab" data-section="rescue">
+        <span class="tab-icon">🚒</span>
+        <span data-i18n="nav_rescue">الإنقاذ</span>
+      </button>
+      <button class="nav-tab" data-section="emergency">
+        <span class="tab-icon">🚨</span>
+        <span data-i18n="nav_emergency">الطوارئ</span>
+      </button>
+      <button class="nav-tab" data-section="weather">
+        <span class="tab-icon">🌤️</span>
+        <span data-i18n="nav_weather">الطقس</span>
+      </button>
+      <button class="nav-tab" data-section="guide">
+        <span class="tab-icon">📚</span>
+        <span data-i18n="nav_guide">الدليل</span>
+      </button>
     </div>
   </div>
 
-  <script src="js/wilayas.js"></script>
-  <script src="js/firebase-config.js"></script>
-  <script src="js/nasa-api.js"></script>
-  <script src="js/app.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="window.emailjs={init:function(){},send:function(){return Promise.reject('offline')}}"></script>
+  <script src="js/translations.js?v=2"></script>
+  <script src="js/wilayas.js?v=2"></script>
+  <script src="js/fire-prediction.js?v=2"></script>
+  <script src="js/shelter-plans.js?v=2"></script>
+  <script src="js/app.js?v=2"></script>
   <script>
     // Register Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').then(function(reg) {
-        console.log('SW registered, scope:', reg.scope);
-        // Check for updates
-        reg.addEventListener('updatefound', function() {
-          var newWorker = reg.installing;
-          newWorker.addEventListener('statechange', function() {
-            if (newWorker.state === 'activated') {
-              if (confirm('تحديث جديد متاح! هل تريد إعادة تحميل الصفحة؟')) {
-                window.location.reload();
-              }
-            }
-          });
-        });
+        console.log('SW registered:', reg.scope);
       }).catch(function(err) {
         console.log('SW registration failed:', err);
       });
     }
-
-    // Detect standalone mode (PWA installed)
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      document.body.classList.add('pwa-standalone');
-    }
-
-    populateWilayaDropdowns();
-    var rd = document.getElementById('reportDate');
-    var rt = document.getElementById('reportTime');
-    if (rd) rd.valueAsDate = new Date();
-    if (rt) {
-        var now = new Date();
-        rt.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-    }
+    
+    // Populate wilaya dropdowns
+    document.addEventListener('DOMContentLoaded', function() {
+      var wilayaSelects = document.querySelectorAll('.wilaya-select, #regWilaya');
+      wilayaSelects.forEach(function(select) {
+        WILAYAS.forEach(function(w) {
+          var option = document.createElement('option');
+          option.value = w.code;
+          option.textContent = w.code + ' - ' + w.name + ' (' + w.nameFr + ')';
+          select.appendChild(option);
+        });
+      });
+      
+      // Populate home zones grid
+      var zonesGrid = document.getElementById('homeZonesGrid');
+      if (zonesGrid) {
+        var zones = getMountainZones();
+        zones.forEach(function(zone) {
+          var riskColor = getFireRiskColor(zone.fireRisk);
+          var div = document.createElement('div');
+          div.className = 'zone-mini-card';
+          div.onclick = function() { switchSection('shelters'); setTimeout(function() { showZoneShelters(zone.id); }, 100); };
+          div.innerHTML = '<div class="zone-mini-header">' +
+            '<span class="zone-mini-name">' + zone.name + '</span>' +
+            '<span class="zone-mini-risk" style="background:' + riskColor + '">' + zone.fireRisk + '</span>' +
+            '</div>' +
+            '<p class="zone-mini-fr">' + zone.nameFr + '</p>';
+          zonesGrid.appendChild(div);
+        });
+      }
+    });
   </script>
 </body>
 </html>
