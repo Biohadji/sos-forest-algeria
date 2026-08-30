@@ -1822,6 +1822,10 @@ function sendAiMessage() {
     getAiResponse(question).then(function (response) {
         hideAiTyping();
         addAiMessage(response, 'ai');
+    }).catch(function (err) {
+        hideAiTyping();
+        addAiMessage('عذراً، حدث خطأ. حاول مرة أخرى.', 'ai');
+        console.log('AI error:', err);
     });
 }
 
@@ -1831,6 +1835,10 @@ function aiQuickQuestion(question) {
     getAiResponse(question).then(function (response) {
         hideAiTyping();
         addAiMessage(response, 'ai');
+    }).catch(function (err) {
+        hideAiTyping();
+        addAiMessage('عذراً، حدث خطأ. حاول مرة أخرى.', 'ai');
+        console.log('AI error:', err);
     });
 }
 
